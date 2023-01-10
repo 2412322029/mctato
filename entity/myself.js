@@ -17,6 +17,7 @@ class player extends baseSquare {
 
         this.HP = player.MaxHP
         this.MP = player.MaxMP
+        this.isOnShooting = false
     }
     /**
      * 固有属性
@@ -25,6 +26,10 @@ class player extends baseSquare {
     static moveSpeed = 10
     static MaxHP = 200
     static MaxMP = 100
+    static Maxshot = 100 //最大弹幕数量
+    static shootingList = [] //弹幕队列
+
+    static lasttime = new Date().getTime()
     /**
     * 同时绘制名字
     * @returns self
@@ -77,7 +82,42 @@ class player extends baseSquare {
         this.ctx.beginPath();
         this.ctx.rect(this.x - this.w / 2, this.y + this.h / 2 + 30, this.w, 15);
         this.ctx.closePath();
-        ctx.strokeStyle = "black";
+        this.ctx.strokeStyle = "black";
         this.ctx.stroke();
+    }
+    shootSk() {
+        
+
+            if (onPressKey.has("arrowright")) {
+                var s = new skul(this.ctx, this.x, this.y, 20, 20)
+                s.speedx = skul.speed
+                player.shootingList.push(s)
+            } else
+                if (onPressKey.has("arrowleft")) {
+                    var s = new skul(this.ctx, this.x, this.y, 20, 20)
+                    s.speedx = -skul.speed
+                    player.shootingList.push(s)
+                } else
+                    if (onPressKey.has("arrowup")) {
+                        var s = new skul(this.ctx, this.x, this.y, 20, 20)
+                        s.speedy = -skul.speed
+                        player.shootingList.push(s)
+                    } else
+                        if (onPressKey.has("arrowdown")) {
+                            var s = new skul(this.ctx, this.x, this.y, 20, 20)
+                            s.speedy = skul.speed
+                            player.shootingList.push(s)
+                        } else
+                            if (player.shootingList.length >= player.Maxshot) {
+                                player.shootingList.shift()
+                            }
+            player.shootingList.forEach(sk => {
+                if (sk.goneRenge > sk.range) {
+                    sk.alive = false
+                } else {
+                    sk.move(sk.speedx, sk.speedy)
+                }
+            });
+        
     }
 }

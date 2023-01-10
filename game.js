@@ -3,7 +3,7 @@
  */
 
 var onrun = false//是否在运行
-var fps = 100//帧率
+var fps = 60//帧率
 
 
 var fpsInterval = 1000 / fps

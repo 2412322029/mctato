@@ -28,4 +28,3 @@ $("#gamepause").click(function (e) {
     gamePause()
 })
 
-

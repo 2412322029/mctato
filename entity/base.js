@@ -210,11 +210,11 @@ class baseSquare extends Position {
      * @param {Array} position 对应精灵图位置（第几排，第几列）
      * @returns self
      */
-    drawImg(position = [0, 0]) {
+    drawImg(position = [0, 0], sizex = 100, sizey = 100) {
         //第几排，第几列
         if (!this.isOutOfRange()) {
             this.ctx.drawImage(this.img, position[0] * 100, position[1] * 100, 100, 100,
-                this.x - this.w / 2, this.y - this.h / 2, 100, 100
+                this.x - this.w / 2, this.y - this.h / 2, sizex, sizey
             )
         }
         return this
