@@ -1,0 +1,60 @@
+@font-face {
+    font-family: 'Smiley Sans';
+    src: url('./resources/SmileySans-Oblique.ttf.woff2') format(woff2);
+}
+@keyframes slowBigger {
+    100%{
+        zoom: 1.5;
+    }
+}
+
+* {
+    font-family: "Smiley Sans";
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+canvas { 
+    width: 1000px;
+    height: 1000px;
+    z-index: 0;
+    
+ }
+
+button {
+    cursor: pointer;
+    border: 0;
+    background-color: black;
+    color: white;
+    padding: 10px 20px 10px;
+    margin: 5px 10px 5px;
+    font-size: larger;
+    border-radius: 50% 0 50%;
+    width: 150px;
+    height: 50px;
+}
+button:hover{
+  font-size: 25px;
+}
+
+#game {
+    /* height: 100vh; */
+    /* width: 100vh; */
+    overflow: hidden;
+}
+
+#manu {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    top: 0;
+    right: 0;
+    border-left: black solid 1px;
+    padding: 5px;
+    width: 20%;
+    height: 100vh;
+    background-color: rgb(0, 0, 2, 0);
+    padding-top: 20vh;
+}

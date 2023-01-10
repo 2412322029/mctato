@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Interface</title>
+</head>
+
+<body>
+    <img id="spirit" src="./resources/spirit.png" alt="" style="display: none;">
+    <div id="game">
+        <canvas id="canvas" width="2000px" height="2000px"></canvas>
+        <div id="manu">
+            <button id="gamestart" type="button">开始</button>
+            <button id="gamepause" type="button">暂停</button>
+            <div id="onpress"></div>
+            <div>
+                <p id="playerspeed"></p>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- 工具库 -->
+<script src="./lib/js/popup.js"></script>
+<script src="/lib/js/jquery-3.6.3.min.js"></script>
+<!-- 源码 -->
+<script src="./entity/base.js"></script>
+<script src="./entity/enemy.js"></script>
+<script src="./entity/myself.js"></script>
+
+<script src="./world.js"></script><!--物体绘制-->
+<script src="./game.js"></script><!-- 世界循环 -->
+<script src="./index.js"></script><!-- 游戏界面控制 -->
+<!-- css -->
+<link rel="stylesheet" href="./lib/css/popup.css">
+<link rel="stylesheet" href="/index.css">
+<script>
+
+
+</script>
+
+</html>
