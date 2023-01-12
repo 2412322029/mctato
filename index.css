@@ -12,13 +12,14 @@
     font-family: "Smiley Sans";
     margin: 0;
     padding: 0;
-    /* overflow: hidden; */
+    overflow: hidden;
+
 }
 canvas { 
     width: 1000px;
     height: 1000px;
     z-index: 0;
-    
+    display: block;
  }
 
 button {

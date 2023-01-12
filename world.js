@@ -7,14 +7,10 @@ var frameX4 = 0;
 
 
 //对象创建
-
-var player1 = new player(ctx, 200, 200)
+const player1 = new player(ctx, 200, 200)
 
 Enemy.init()
-for (let i = 0; i < 2; i++) {
-    Enemy.init()
-    
-}
+
 
 // var sk = new skul(ctx, 100, 100, 10, 10)
 
@@ -27,25 +23,21 @@ function render() {
 
 
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
+    // ctx.fillStyle="#73634A"
+    // ctx.fillRect(0, 0, 2000, 2000)
 
     drawRenderArea(ctx)//显示渲染区域边框
 
 
 
-    player1.shoot(skul)
+   
     Enemy.movement()
 
 
     //键盘按键触发事件,多按键放在单按键前面 ，控制按键放最前
     {
-        if (onPressKey.has("shift")) {
-            player.moveSpeed = 20
-        } else {
-            player.moveSpeed = 10
-        }
-
-
-        //TODO 先计算速度矢量，最后move 
+        player1.shoot(skul)//人物行为切换
+        //人物移动
         var vx = 0
         var vy = 0
         var sp = player.moveSpeed / Math.sqrt(2)
@@ -70,22 +62,29 @@ function render() {
         } else if (onPressKey.has("a") && onPressKey.has("d")) {
             vx = 0
         } else if (onPressKey.has("w")) {
+            player.imgp=player.imgup
             vy = -player.moveSpeed
         } else if (onPressKey.has("s")) {
+            player.imgp=player.imgdown
             vy = player.moveSpeed
         } else if (onPressKey.has("a")) {
+            player.imgp=player.imgleft
             vx = -player.moveSpeed
         } else if (onPressKey.has("d")) {
+            player.imgp=player.imgright
             vx = player.moveSpeed
         } else {
+            player.imgp=player.imgcenter
             player1.draw()
         }
         player1.move(vx, vy)
         //
 
-
-
     }
 
     showDebug(ctx)
+
+    if (onPressKey.has("enter")) {
+        onrun = false
+    }
 }

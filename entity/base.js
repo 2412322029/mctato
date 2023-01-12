@@ -3,8 +3,9 @@
 var visibleArea = [document.body.clientWidth, document.body.clientHeight]
 var displayPosition = false //显示坐标
 var showHPMPtext = true //显示血条文字
-var renderArea = [0, 0, 2400, 1420]//渲染区域大小
-var showHitBox = false //显示碰撞箱
+var renderArea = [0, 0, 2400, 1400]//渲染区域大小
+var showHitBox = true //显示碰撞箱
+var showGuardingCircle = true //显示警戒圈
 /**
  * 绘制渲染区域
  */
@@ -231,15 +232,14 @@ class baseSquare extends Position {
             this.w, this.h);
         return (this.ctx.isPointInPath(tx, ty))
     }
-    boxisInMe(tx, ty, w, h) {
-        ctx.beginPath();
-        this.ctx.rect((this.x - this.w / 2) - w / 2, (this.y - this.h / 2) - h / 2,
-            this.w + w, this.h + h);
+    showBox(w, h) {
         if (showHitBox) {
+            this.ctx.beginPath();
+            this.ctx.rect((this.x - this.w / 2) - w / 2, (this.y - this.h / 2) - h / 2,
+                this.w + w, this.h + h);
             this.ctx.stroke()
+            this.ctx.closePath()
         }
-        
-        return this.ctx.isPointInPath(tx, ty)
     }
     move(vx, vy) {
         this.x += vx
@@ -253,20 +253,19 @@ class baseSquare extends Position {
      * @param {Number} speed 移动速度
      */
     moveTo(tox, toy, speed) {
-        if (tox != this.x && toy != this.y) {//如果未到达目标点
+        console.log(tox, toy, speed);
+        if (tox != this.x || toy != this.y) {//如果未到达目标点
             var Lx = tox - this.x //到目标点的x距离
             var Ly = toy - this.y //到目标点的y距离
             var speedX = speed * Lx / Math.sqrt(Lx ** 2 + Ly ** 2)
             var speedY = speed * Ly / Math.sqrt(Lx ** 2 + Ly ** 2)
             this.x += speedX
             this.y += speedY
-            if (Math.abs(Lx) < speed && Math.abs(Ly) < speed) {
+            if (Math.abs(Lx) <= speed && Math.abs(Ly) <= speed) {
                 this.x = tox
                 this.y = toy
             }
         }
-
-        this.draw()
     }
     isAlive() {
         // TODO:什么时候死亡
@@ -289,6 +288,43 @@ class baseSquare extends Position {
     }
     getPosition() {
         return [this.x, this.y]
+    }
+    /**
+     * 被击退
+     * @param {Number} x 击退来源x坐标
+     * @param {Number} y 击退来源y坐标
+     * @param {Number} distance 击退距离
+     * @param {*} direction 击退方向left/right/up/down
+     */
+    beenKnockBack(x, y, distance = 20, direction) {
+        // console.log(x, y, distance, direction);
+        var deltaX = this.x - x
+        var deltaY = this.y - y
+        var xb = Math.floor(Math.sqrt(deltaX ** 2 + deltaY ** 2))
+        if (xb==0) {
+            xb =1
+        }
+        var knockX = deltaX * distance / xb
+        var knockY = deltaY * distance / xb
+        switch (direction) {
+            case 'left':
+                this.x -= distance
+                break;
+            case 'right':
+                this.x += distance
+                break;
+            case 'up':
+                this.y -= distance
+                break;
+            case 'down':
+                this.y += distance
+                break;
+            default:
+                this.x += knockX
+                this.y += knockY
+                break;
+        }
+
     }
 }
 

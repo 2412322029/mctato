@@ -49,14 +49,15 @@ function showDebug(ctx) {
     ctx.shadowColor = "black";
     ctx.fillStyle = "black";
     eachmsg = [
-        "fps: " + realTimefps,
-        "速度：" + player.moveSpeed,
+        "FPS: " + realTimefps,
         "按键：" + Array.from(onPressKey).join(","),
         "玩家信息------------",
         "   名称: " + player.names,
-        "   移动速度: " + player.moveSpeed,
-        "   血量上限: " + player.MaxHP,
-        "   MaxMP: " + player.MaxMP,
+        "   基础移速: " + player.baseSpeed,
+        "   实时移速: " + player.moveSpeed,
+        "   移速加成: " + player.speedAdd,
+        "   体力消耗速度: " + player.staminaBurnRate+"点每30帧",
+        "   体力恢复速度: " + player.staminaRecoveryRate+"点每30帧",
         "   最大弹幕数: " + player.Maxshot,
         "   显示弹幕数：" + player.shootingList.length,
         "   射击间隔: " + player.ShootInterval + " ms",
@@ -66,7 +67,7 @@ function showDebug(ctx) {
         "   怪物数量: "+ Enemy.list.length,
     ]
     eachmsg.forEach((msg, index) => {
-        ctx.fillText(msg, 10, 40 + fontSize * index + 5)
+        ctx.fillText(msg, 10, 200 + fontSize * index + 5)
     });
 
 }
