@@ -3,51 +3,45 @@
  */
 var canvas = document.getElementById('canvas');//获取画布元素
 var ctx = canvas.getContext('2d');
-
+var frameX4 = 0;
 
 
 //对象创建
 
-// var a = new baseCircle(ctx, 800, 600, 70)
-var c = new baseSquare(ctx, 1500, 200)
-var b = new player(ctx, 200, 200)
+var player1 = new player(ctx, 200, 200)
 
-
-var d = new Creeper(ctx, 600, 600)
+Enemy.init()
+for (let i = 0; i < 2; i++) {
+    Enemy.init()
+    
+}
 
 // var sk = new skul(ctx, 100, 100, 10, 10)
 
 //渲染函数
 function render() {
+    frameX4++
+    if (frameX4 == fps * 4) {
+        frameX4 = 0
+    }
+
+
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
 
-
-
     drawRenderArea(ctx)//显示渲染区域边框
-    b.shootSk()
-    // sk.move()
 
-    // a.draw().showName()
-    c.draw()
-    d.draw()
 
-    // b.moveTo(mousep[0] * 2, mousep[1] * 2, 10)
-    // if (b.isInMe(mousep[0] * 2, mousep[1] * 2)) {
-    //     console.log("点击了b");
 
-    // mousep = []
-    // }
-    // console.log(b.getPosition())
+    player1.shoot(skul)
+    Enemy.movement()
 
 
     //键盘按键触发事件,多按键放在单按键前面 ，控制按键放最前
     {
         if (onPressKey.has("shift")) {
             player.moveSpeed = 20
-            $("#playerspeed").text("速度:" + player.moveSpeed)
         } else {
             player.moveSpeed = 10
-            $("#playerspeed").text("速度:" + player.moveSpeed)
         }
 
 
@@ -84,13 +78,14 @@ function render() {
         } else if (onPressKey.has("d")) {
             vx = player.moveSpeed
         } else {
-            b.draw()
+            player1.draw()
         }
-        b.move(vx, vy)
+        player1.move(vx, vy)
         //
 
 
 
     }
 
+    showDebug(ctx)
 }

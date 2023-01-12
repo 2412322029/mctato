@@ -14,10 +14,12 @@ class player extends baseSquare {
     constructor(ctx, x, y, w, h) {
         super(ctx, x, y, w, h)
         this.imgp = [9, 0]
+        this.imgflash = [9, 1]
 
         this.HP = player.MaxHP
         this.MP = player.MaxMP
         this.isOnShooting = false
+        this.alive = true
     }
     /**
      * 固有属性
@@ -26,24 +28,58 @@ class player extends baseSquare {
     static moveSpeed = 10
     static MaxHP = 200
     static MaxMP = 100
-    static Maxshot = 100 //最大弹幕数量
+    static Maxshot = 30 //最大弹幕数量
     static shootingList = [] //弹幕队列
-
-    static lasttime = new Date().getTime()
+    static atShootInterval = false //是否处于射击间隔
+    static ShootInterval = 100 //射击间隔(ms)
+    static ShootspeedLose = 0.6 //弹幕初速度损失（带有n%的玩家速度）
+    static invincibleTime = 1000 //无敌
+    static isInvincible = false //处于无敌状态
     /**
     * 同时绘制名字
     * @returns self
     */
     draw() {
-        var coordinate = ""
-        if (displayPosition) {
-            coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
+        if (player.isInvincible && frameX4 % 30 > 15) {
+
+            super.drawImg(this.imgflash)
+
+
+            super.showName(names)
+            this.beenHit()
+            this.checkHP()
+            this.showRealTimeHP()
+            this.showRealTimeMP()
+            return
         }
-        var names = player.names + coordinate
-        super.drawImg(this.imgp)
-        super.showName(names)
-        this.showRealTimeHP()
-        this.showRealTimeMP()
+        if (this.alive) {//如果没死
+            var coordinate = ""
+            if (displayPosition) {
+                coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
+            }
+            var names = player.names + coordinate
+            super.drawImg(this.imgp)
+            super.showName(names)
+            this.beenHit()
+            this.checkHP()
+            this.showRealTimeHP()
+            this.showRealTimeMP()
+        } else {
+            // onrun = false
+            if (confirm("死了，复活or重开")) {
+                player1.HP = player.MaxHP
+                player1.alive = true
+                onPressKey = new Set()
+                // onrun=true
+            } else {
+                alert(1)
+            }
+            //todo 重生选择界面
+        }
+        // if (condition) {
+
+        // }
+
         return this
     }
     showRealTimeHP() {
@@ -85,39 +121,94 @@ class player extends baseSquare {
         this.ctx.strokeStyle = "black";
         this.ctx.stroke();
     }
-    shootSk() {
-        
-
+    move(vx, vy) {
+        this.vx = vx
+        this.vy = vy
+        this.x += vx
+        this.y += vy
+        vy+=10
+        this.draw()
+    }
+    shoot(weapon) {
+        player.throttle(() => {
             if (onPressKey.has("arrowright")) {
-                var s = new skul(this.ctx, this.x, this.y, 20, 20)
-                s.speedx = skul.speed
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20)
+                s.initvx = this.vx * player.ShootspeedLose
+                s.initvy = this.vy * player.ShootspeedLose
+                s.speedx = weapon.speed
                 player.shootingList.push(s)
-            } else
-                if (onPressKey.has("arrowleft")) {
-                    var s = new skul(this.ctx, this.x, this.y, 20, 20)
-                    s.speedx = -skul.speed
-                    player.shootingList.push(s)
-                } else
-                    if (onPressKey.has("arrowup")) {
-                        var s = new skul(this.ctx, this.x, this.y, 20, 20)
-                        s.speedy = -skul.speed
-                        player.shootingList.push(s)
-                    } else
-                        if (onPressKey.has("arrowdown")) {
-                            var s = new skul(this.ctx, this.x, this.y, 20, 20)
-                            s.speedy = skul.speed
-                            player.shootingList.push(s)
-                        } else
-                            if (player.shootingList.length >= player.Maxshot) {
-                                player.shootingList.shift()
-                            }
-            player.shootingList.forEach(sk => {
-                if (sk.goneRenge > sk.range) {
-                    sk.alive = false
-                } else {
-                    sk.move(sk.speedx, sk.speedy)
+            } else if (onPressKey.has("arrowleft")) {
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20)
+                s.initvx = this.vx * player.ShootspeedLose
+                s.initvy = this.vy * player.ShootspeedLose
+                s.speedx = -weapon.speed
+                player.shootingList.push(s)
+            } else if (onPressKey.has("arrowup")) {
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20)
+                s.initvx = this.vx * player.ShootspeedLose
+                s.initvy = this.vy * player.ShootspeedLose
+                s.speedy = -weapon.speed
+                player.shootingList.push(s)
+            } else if (onPressKey.has("arrowdown")) {
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20)
+                s.initvx = this.vx * player.ShootspeedLose
+                s.initvy = this.vy * player.ShootspeedLose
+                s.speedy = weapon.speed
+                player.shootingList.push(s)
+            }
+        }, player.ShootInterval / weapon.modify)
+
+        if (player.shootingList.length >= player.Maxshot) {
+            player.shootingList.shift()
+        }
+        player.shootingList.forEach(sk => {
+            if (sk.goneRenge > sk.range) {
+                sk.alive = false
+            } else {
+                sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
+            }
+        });
+
+    }
+    // 函数节流（固定时间内无论触发几次，仅执行一次）
+    static throttle(func, interval) {
+        if (player.atShootInterval) {// 终止后续代码的执行
+            return
+        }
+        player.atShootInterval = true
+        setTimeout(async () => {
+            func()
+            player.atShootInterval = false
+        }, interval)
+    }
+    /**
+     * 检查血量并且纠正,判断死活
+     */
+    checkHP() {
+        if (this.HP <= 0) {
+            this.alive = false
+            this.HP = 0
+        } else if (this.HP >= this.MaxHP) {
+            this.HP = this.MaxHP
+        }
+    }
+    beenHit() {//
+        if (this.alive) {
+            if (player.isInvincible) {
+                return
+            }
+            Enemy.list.forEach(e => {
+                if (e.boxisInMe(this.x, this.y, this.w, this.h)) {
+                    if (e.alive) {
+                        this.HP -= e.hitDamage
+                        player.isInvincible = true
+                        setTimeout(() => {
+                            player.isInvincible = false
+                        }, player.invincibleTime)
+                    }
+
                 }
-            });
-        
+            })
+        };
     }
 }

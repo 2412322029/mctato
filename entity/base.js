@@ -1,10 +1,10 @@
 //常量
 
 var visibleArea = [document.body.clientWidth, document.body.clientHeight]
-var displayPosition = true //显示坐标
-var showHPMPtext = true
+var displayPosition = false //显示坐标
+var showHPMPtext = true //显示血条文字
 var renderArea = [0, 0, 2400, 1420]//渲染区域大小
-
+var showHitBox = false //显示碰撞箱
 /**
  * 绘制渲染区域
  */
@@ -226,9 +226,20 @@ class baseSquare extends Position {
      * @returns {boolean} 
      */
     isInMe(tx, ty) {
+        ctx.beginPath();
         this.ctx.rect(this.x - this.w / 2, this.y - this.h / 2,
             this.w, this.h);
         return (this.ctx.isPointInPath(tx, ty))
+    }
+    boxisInMe(tx, ty, w, h) {
+        ctx.beginPath();
+        this.ctx.rect((this.x - this.w / 2) - w / 2, (this.y - this.h / 2) - h / 2,
+            this.w + w, this.h + h);
+        if (showHitBox) {
+            this.ctx.stroke()
+        }
+        
+        return this.ctx.isPointInPath(tx, ty)
     }
     move(vx, vy) {
         this.x += vx
@@ -280,3 +291,4 @@ class baseSquare extends Position {
         return [this.x, this.y]
     }
 }
+

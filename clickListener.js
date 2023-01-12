@@ -11,13 +11,12 @@ function keyEvent() {
     $(document).keydown(function (e) {
         if (!onPressKey.has(e.key.toLowerCase())) {
             onPressKey.add(e.key.toLowerCase())
-            $("#onpress").html(Array.from(onPressKey).join("<br>"))
+           
         }
     })
     $(document).keyup(function (e) {
         onPressKey.delete('alt')
         onPressKey.delete(e.key.toLowerCase())
-        $("#onpress").html(Array.from(onPressKey).join("<br>"))
     })
 }
 keyEvent()

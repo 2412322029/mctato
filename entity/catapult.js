@@ -9,23 +9,29 @@ class skul extends baseSquare {
      * @param {Number} y 物体中心点y坐标
      * @param {Number} w 物体宽度
      * @param {Number} h 物体高度
+     * @param {Number} range 射程
      */
-
-    constructor(ctx, x, y, w, h, range, goneRenge) {
+    constructor(ctx, x, y, w, h, range) {
         super(ctx, x, y, w, h)
         this.imgp = [8, 0]
         this.range = range | 1000//射程
-        this.goneRenge = goneRenge | 0 //已经走的距离
+        this.goneRenge = 0 //已经走的距离
 
-        this.speedx = 0
-        this.speedy = 0
+        this.speedx = 0 //具有的速度
+        this.speedy = 0 //具有的速度
+
+        this.initvx = 0 //惯性速度（带有发射者的瞬时速度）
+        this.initvy = 0 //惯性速度（带有发射者的瞬时速度）
+
+        this.damage = 10 //上海
         this.alive = true
     }
     /**
      * 固有属性
      */
     static names = "凋零骷髅头"
-    static speed = 20
+    static speed = 40 //初始弹道速度
+    static modify = 2 //攻速倍率
     /**
     * 同时绘制名字
     * @returns self
@@ -39,21 +45,25 @@ class skul extends baseSquare {
             var names = coordinate
             super.drawImg(this.imgp, this.w, this.h)
             // super.showName(names)
+
         }
         return this
     }
     move(vx, vy) {
-        // setTimeout(() => {
-        //     if (this.w>0 *this.h>0) {
-        //         this.w -= 1
-        //     this.h -= 1
-        //     }
-            
-        // }, this.range*0.6/this.speed);
-
         this.goneRenge += Math.abs(vx) + Math.abs(vy)
         this.x += vx
         this.y += vy
         this.draw()
+        this.aim()
+    }
+    aim() {
+        if (this.alive) {
+            Enemy.list.forEach(e => {
+                if (e.alive & e.boxisInMe(this.x, this.y, this.w, this.h)) {
+                    e.HP -=this.damage  
+                    this.alive = false
+                }
+            })
+        };
     }
 }
