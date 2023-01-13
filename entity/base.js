@@ -1,20 +1,11 @@
 //常量
-
-var visibleArea = [document.body.clientWidth, document.body.clientHeight]
-var displayPosition = false //显示坐标
+var zoomRatio = 0.6 //默认缩放比
+var displayPosition = false   //显示坐标
 var showHPMPtext = true //显示血条文字
-var renderArea = [0, 0, 2400, 1400]//渲染区域大小
+var showdebug = true
 var showHitBox = true //显示碰撞箱
 var showGuardingCircle = true //显示警戒圈
-/**
- * 绘制渲染区域
- */
-function drawRenderArea(ctx) {
-    ctx.beginPath();
-    ctx.rect(renderArea[0], renderArea[1], renderArea[2], renderArea[3]);
-    ctx.closePath();
-    ctx.stroke();
-}
+
 /**
  * 位置基类
  */
@@ -127,10 +118,10 @@ class baseCircle extends Position {
      * @returns 
      */
     isOutOfRange() {
-        if (this.x + this.radius < renderArea[0] ||
-            this.y + this.radius < renderArea[1] ||
-            this.x - this.radius > renderArea[2] ||
-            this.y - this.radius > renderArea[3]) {
+        if (this.x + this.radius < 0 ||
+            this.y + this.radius < 0 ||
+            this.x - this.radius > canvas.width ||
+            this.y - this.radius > canvas.height) {
             this.outOfRange = true
         } else {
             this.outOfRange = false
@@ -232,6 +223,11 @@ class baseSquare extends Position {
             this.w, this.h);
         return (this.ctx.isPointInPath(tx, ty))
     }
+    /**
+     * 显示一个物体相对于自己的碰撞范围（中心的进入这个范围代表产生碰撞）
+     * @param {Number} w 要显示物体的宽
+     * @param {Number} h 要显示物体的高
+     */
     showBox(w, h) {
         if (showHitBox) {
             this.ctx.beginPath();
@@ -241,9 +237,26 @@ class baseSquare extends Position {
             this.ctx.closePath()
         }
     }
+    /**
+     * 以一定速度移动
+     * @param {*} vx x速度分量
+     * @param {*} vy y速度分量
+     */
     move(vx, vy) {
         this.x += vx
         this.y += vy
+        if (this.x-this.w/2-108<=0) {
+            this.x=this.w/2+108
+        }
+        if (this.x+this.w/2+108>=2000) {
+            this.x=2000-this.w/2-108
+        }
+        if (this.y-this.h/2-85<=0) {
+            this.y=this.h/2+85
+        }
+        if (this.y+this.h/2+75>=1125) {
+            this.y=1125-this.h/2-70
+        }
         this.draw()
     }
     /**
@@ -253,7 +266,6 @@ class baseSquare extends Position {
      * @param {Number} speed 移动速度
      */
     moveTo(tox, toy, speed) {
-        console.log(tox, toy, speed);
         if (tox != this.x || toy != this.y) {//如果未到达目标点
             var Lx = tox - this.x //到目标点的x距离
             var Ly = toy - this.y //到目标点的y距离
@@ -264,6 +276,18 @@ class baseSquare extends Position {
             if (Math.abs(Lx) <= speed && Math.abs(Ly) <= speed) {
                 this.x = tox
                 this.y = toy
+            }
+            if (this.x-this.w/2-108<=0) {
+                this.x=this.w/2+108
+            }
+            if (this.x+this.w/2+108>=2000) {
+                this.x=2000-this.w/2-108
+            }
+            if (this.y-this.h/2-85<=0) {
+                this.y=this.h/2+85
+            }
+            if (this.y+this.h/2+75>=1125) {
+                this.y=1125-this.h/2-70
             }
         }
     }
@@ -276,16 +300,20 @@ class baseSquare extends Position {
      * @returns 
      */
     isOutOfRange() {
-        if (this.x + this.w / 2 < renderArea[0] ||
-            this.y + this.h / 2 < renderArea[1] ||
-            this.x - this.w / 2 > renderArea[2] ||
-            this.y - this.h / 2 > renderArea[3]) {
+        if (this.x + this.w / 2 < 0 ||
+            this.y + this.h / 2 < 0 ||
+            this.x - this.w / 2 > canvas.width ||
+            this.y - this.h / 2 > canvas.height) {
             this.outOfRange = true
         } else {
             this.outOfRange = false
         }
         return this.outOfRange
     }
+    /**
+     * 返回自己坐标数组
+     * @returns [x,y] 
+     */
     getPosition() {
         return [this.x, this.y]
     }
@@ -294,16 +322,13 @@ class baseSquare extends Position {
      * @param {Number} x 击退来源x坐标
      * @param {Number} y 击退来源y坐标
      * @param {Number} distance 击退距离
-     * @param {*} direction 击退方向left/right/up/down
+     * @param {*} direction 击退方向left/right/up/down（默认全方向）
      */
     beenKnockBack(x, y, distance = 20, direction) {
-        // console.log(x, y, distance, direction);
         var deltaX = this.x - x
         var deltaY = this.y - y
         var xb = Math.floor(Math.sqrt(deltaX ** 2 + deltaY ** 2))
-        if (xb==0) {
-            xb =1
-        }
+        if (xb == 0) { this.x -= distance; return }
         var knockX = deltaX * distance / xb
         var knockY = deltaY * distance / xb
         switch (direction) {

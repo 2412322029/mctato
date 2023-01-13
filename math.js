@@ -8,7 +8,7 @@ function Xtest(objlist, obj) {
     var filterObjlist = []
     objlist.forEach(e => {
         if (Math.abs(e.x - obj.x) <= (e.w + obj.w) / 2) {
-            e.showBox(obj.w, obj.h)
+            e.showBox(obj.w, obj.h)//检测时显示碰撞箱
             filterObjlist.push(e)
         }
     });
@@ -23,7 +23,7 @@ function Xtest(objlist, obj) {
 function Ytest(objlist, obj) {
     var filterObjlist = []
     objlist.forEach(e => {
-        e.showBox(obj.w, obj.h)
+        e.showBox(obj.w, obj.h)//检测时显示碰撞箱
         if (Math.abs(e.y - obj.y) <= (e.h + obj.h) / 2) {
             filterObjlist.push(e)
         }
@@ -43,7 +43,14 @@ function YXtest(objlist, obj) {
     return Xtest(Ytest(objlist, obj), obj)
 }
 
-
+/**
+ * 两点之间的直线距离
+ * @param {Number} x1 
+ * @param {Number} y1 
+ * @param {Number} x2 
+ * @param {Number} y2 
+ * @returns 
+ */
 function P2Pdistance(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) ** 2+ (y1 - y2) ** 2)
 }

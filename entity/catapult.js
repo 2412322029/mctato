@@ -61,7 +61,7 @@ class skul extends baseSquare {
     aim() {
         if (this.alive) {
             XYtest(Enemy.list, this).forEach(e => {
-                if (e.alive) {
+                if (e.alive && this.alive) {
                     e.HP -= this.damage
                     e.status = 2
                     e.beenKnockBack(this.x, this.y, this.knockDistance, this.direction)

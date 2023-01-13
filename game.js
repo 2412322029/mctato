@@ -17,6 +17,7 @@ function animloop() {
     if (elapsed > fpsInterval) {
         last = now - (elapsed % fpsInterval);
         render();//world.js中的渲染函数
+        
         if(!lastCalledTime) {//计算实时帧率
             lastCalledTime = Date.now();
             realTimefps = 0;
@@ -64,6 +65,7 @@ function showDebug(ctx) {
         "   弹幕初速度损失: " + player.ShootspeedLose,
         "   是否无敌: "+ player.isInvincible,
         "世界信息------------",
+        "   怪物数量: "+ Enemy.list.length,
         "   怪物数量: "+ Enemy.list.length,
     ]
     eachmsg.forEach((msg, index) => {

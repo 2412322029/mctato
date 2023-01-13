@@ -7,7 +7,7 @@ var frameX4 = 0;
 
 
 //对象创建
-const player1 = new player(ctx, 200, 200)
+const player1 = new player(ctx, 150, 150)
 
 Enemy.init()
 
@@ -23,10 +23,9 @@ function render() {
 
 
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
-    // ctx.fillStyle="#73634A"
-    // ctx.fillRect(0, 0, 2000, 2000)
+    ctx.drawImage(document.getElementById("bg"),0,0,2000,1125,0,0,2000,1125)
 
-    drawRenderArea(ctx)//显示渲染区域边框
+
 
 
 
@@ -81,10 +80,7 @@ function render() {
         //
 
     }
-
-    showDebug(ctx)
-
-    if (onPressKey.has("enter")) {
-        onrun = false
+    if (showdebug) {
+        showDebug(ctx)
     }
 }

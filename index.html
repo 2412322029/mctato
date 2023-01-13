@@ -5,27 +5,108 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Interface</title>
+    <title>mctato</title>
 </head>
 
 <body>
+    <button style="position: fixed; left: 200px;" onclick="Enemy.list=[];Enemy.init()">生成怪物</button>
     <img id="spirit" src="./resources/spirit.png" alt="" style="display: none;">
+    <img id="bg" src="./resources/bg.png" alt="" style="display: none;">
     <div id="game">
-        <canvas id="canvas" width="2000px" height="2000px"></canvas>
-        <div id="manu">
-            <button id="gamestart" type="button">开始</button>
-            <button id="gamepause" type="button">暂停</button>
-            <div id="onpress"></div>
-            <div>
-                <p id="playerspeed"></p>
+        <!-- 16/9 -->
+        <!-- 开始界面 -->
+        <div id="cover">
+
+            <div id="gamejc">
+                <div>
+                    <h2 id="hidemsg"></h2>
+                </div>
+                <div class="jc">
+                    <div class="list">
+                        <div class="selected">键位</div>
+                        <div>键位</div>
+                        <div class="selected">键位</div>
+                    </div>
+                    <div class="content">
+                        <div id="kjj">
+                            <table id="jianwei">
+                                <th>按键</th>
+                                <th>作用</th>
+                                <tr>
+                                    <td>Esc</td>
+                                    <td>开始/暂停</td>
+                                </tr>
+                                <tr>
+                                    <td>w</td>
+                                    <td>向上移动</td>
+                                </tr>
+                                <tr>
+                                    <td>a</td>
+                                    <td>向左移动</td>
+                                </tr>
+                                <tr>
+                                    <td>s</td>
+                                    <td>向下移动</td>
+                                </tr>
+                                <tr>
+                                    <td>d</td>
+                                    <td>向右移动</td>
+                                </tr>
+                                <tr>
+                                    <td>↑</td>
+                                    <td>向上射击</td>
+                                </tr>
+                                <tr>
+                                    <td>←</td>
+                                    <td>向左射击</td>
+                                </tr>
+                                <tr>
+                                    <td>↓</td>
+                                    <td>向下射击</td>
+                                </tr>
+                                <tr>
+                                    <td>→</td>
+                                    <td>向右射击</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- 背包界面 -->
+        <div id="backpack">
+            <div id="backcover">
+                <div>
+
+                </div>
+            </div>
+        </div>
+        <canvas id="canvas" width="2000px" height="1125px"></canvas>
+        <!-- 菜单 -->
+        <div id="manu">
+            <button id="gamestart" type="button">开始(Esc)</button>
+            <div id="setting">
+                缩放: <br>
+                <input id="changewidth" type="range" step="0.01" min="0.4" max="1" @mousedown="xxxx1()"
+                    @mouseup='xxxx2()' v-model="zoomRatio">
+                <span style="display: block;">{{zoomRatio}}</span>
+                <p>调试信息 <input type="checkbox" v-model="showdebug"></p>
+                <p>显示条文字 <input type="checkbox" v-model="showHPMPtext"></p>
+                <p>显示坐标 <input type="checkbox" v-model="displayPosition"></p>
+                <p>显示相对碰撞箱 <input type="checkbox" v-model="showHitBox"></p>
+                <p>显示警戒圈 <input type="checkbox" v-model="showGuardingCircle"></p>
+                <p style="cursor: pointer;" onclick="animloop()">更新(渲染一帧)</p>
+            </div>
+        </div>
+
     </div>
 </body>
 <!-- 工具库 -->
-<script src="./lib/js/popup.js"></script>
-<script src="/lib/js/jquery-3.6.3.min.js"></script>
-<script src="/math.js"></script>
+<script src="./lib/js/jquery-3.6.3.min.js"></script>
+<script src="./lib/js/vue.js"></script>
+<script src="./math.js"></script>
 <!-- 源码 -->
 <script src="./clickListener.js"></script><!--按键监听-->
 <script src="./entity/base.js"></script><!--基础实体-->
@@ -37,8 +118,7 @@
 <script src="./game.js"></script><!-- 世界循环 -->
 <script src="./index.js"></script><!-- 游戏界面控制 -->
 <!-- css -->
-<link rel="stylesheet" href="./lib/css/popup.css">
-<link rel="stylesheet" href="/index.css">
+<link rel="stylesheet" href="./index.css">
 <script>
 
 

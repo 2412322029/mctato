@@ -188,8 +188,8 @@ class Enemy {
     static list = []
     static init() {
         for (let i = 0; i < 5; i++) {
-            var d = new Zombie(ctx, Math.floor(Math.random() * renderArea[2]),
-                Math.floor(Math.random() * renderArea[3]))
+            var d = new Zombie(ctx, 500+Math.floor(Math.random() * (canvas.width-300)),
+               500+ Math.floor(Math.random() * (canvas.height-300)))
             Enemy.list.push(d)
         }
 

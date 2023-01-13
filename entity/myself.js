@@ -55,11 +55,12 @@ class player extends baseSquare {
     * @returns self
     */
     draw() {
+
+        // console.log(1);
+        //无敌闪烁
         if (player.isInvincible && frameX4 % 30 > 15) {
 
             super.drawImg(player.imgflash)
-
-
             this.showName(player.names)
             this.beenHit()
             this.checkHP()
@@ -74,6 +75,7 @@ class player extends baseSquare {
             }
             var names = player.names + coordinate
             super.drawImg(player.imgp)
+
             super.showName(player.names)
             this.beenHit()
             this.checkHP()
@@ -97,6 +99,8 @@ class player extends baseSquare {
         // }
 
         return this
+
+
     }
     /**
      * 显示实时血量
@@ -113,7 +117,7 @@ class player extends baseSquare {
         this.ctx.stroke();
 
         this.ctx.font = "30px none"
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "#fff";
         this.ctx.fillText("HP :", 20, 65)
 
         this.ctx.font = "20px none"
@@ -139,7 +143,7 @@ class player extends baseSquare {
         this.ctx.stroke();
 
         this.ctx.font = "30px none"
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "#fff";
         this.ctx.fillText("MP :", 20, 105)
         if (showHPMPtext) {
             this.ctx.font = "20px none"
@@ -194,31 +198,47 @@ class player extends baseSquare {
         this.vy = vy
         this.x += vx
         this.y += vy
-        vy += 10
+        if (this.x-this.w/2-108<=0) {
+            this.x=this.w/2+108
+        }
+        if (this.x+this.w/2+108>=2000) {
+            this.x=2000-this.w/2-108
+        }
+        if (this.y-this.h/2-85<=0) {
+            this.y=this.h/2+85
+        }
+        if (this.y+this.h/2+75>=1125) {
+            this.y=1125-this.h/2-70
+        }
+        
         this.draw()
     }
+    /**
+     * 使用弹幕武器射击
+     * @param {Object} weapon 武器类名
+     */
     shoot(weapon) {//武器
         player.throttle(() => {
             if (onPressKey.has("arrowright")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20,'right')
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedx = weapon.speed
                 player.shootingList.push(s)
             } else if (onPressKey.has("arrowleft")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20,'left')
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedx = -weapon.speed
                 player.shootingList.push(s)
             } else if (onPressKey.has("arrowup")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20,'up')
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedy = -weapon.speed
                 player.shootingList.push(s)
             } else if (onPressKey.has("arrowdown")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20,'down')
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedy = weapon.speed
@@ -260,8 +280,12 @@ class player extends baseSquare {
             this.HP = this.MaxHP
         }
     }
-    beenHit() {//
-        if (this.alive) {
+    /**
+     * 使用X优先的投影检测与怪物的碰撞
+     * 碰撞受伤进入短暂无敌
+     */
+    beenHit() {
+        if (this.alive) {// 确保玩家还活着
             if (player.isInvincible) {
                 return
             }
@@ -277,6 +301,9 @@ class player extends baseSquare {
             })
         };
     }
+    /**
+     * shift加速功能
+     */
     speedUp() {
         if (player.canSpeedUp && this.stamina >= 0) {//能够加速并且体力>=0
             this.showRealTimeStamina()//显示体力条
@@ -286,13 +313,13 @@ class player extends baseSquare {
                 } else {
                     player.moveSpeed = player.baseSpeed //恢复基础移速
                 }
-                if (this.stamina != 0 & frameX4 % 2 < 1) {//每30帧减少
+                if (this.stamina != 0 & frameX4 % 2 < 1) {//每2帧减少
                     this.stamina--
                 }
             } else {//没有按住shift（恢复体力状态）
                 player.moveSpeed = player.baseSpeed //恢复基础移速
                 if (this.stamina < player.Maxstamina) {
-                    if (frameX4 % 2 < 1) {//每30帧恢复
+                    if (frameX4 % 8 < 1) {//每2帧恢复
                         this.stamina++
                     }
                 }

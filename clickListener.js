@@ -11,7 +11,7 @@ function keyEvent() {
     $(document).keydown(function (e) {
         if (!onPressKey.has(e.key.toLowerCase())) {
             onPressKey.add(e.key.toLowerCase())
-           
+
         }
     })
     $(document).keyup(function (e) {
@@ -20,3 +20,6 @@ function keyEvent() {
     })
 }
 keyEvent()
+
+
+
