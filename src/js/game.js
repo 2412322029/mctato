@@ -1,16 +1,19 @@
 /**
  * 世界循环
  */
-
-var onrun = false//是否在运行
+import {render} from './world.js'
+import { onPressKey } from "./world.js"
+import { player } from './myself.js'
+import { Enemy } from './enemy.js'
+var onrun = true//是否在运行
 var fps = 100//帧率
 var realTimefps = 0//实际fps
 var lastCalledTime //上一帧时间
 
 var fpsInterval = 1000 / fps
 var last = new Date().getTime()
+var rafId
 function animloop() {
-
     rafId = requestAnimationFrame(animloop);
     var now = new Date().getTime()
     var elapsed = now - last;
@@ -26,21 +29,11 @@ function animloop() {
         var delta =1000 / (Date.now() - lastCalledTime);
         lastCalledTime = Date.now();
         realTimefps =Math.floor(delta);
-        controlframeload = false
 
         if (!onrun) {
             cancelAnimationFrame(rafId)
         }
     }
-
-
-        
-
-
-   
-   
-
-
 }
 animloop();//开始
 
@@ -49,7 +42,7 @@ function showDebug(ctx) {
     ctx.font = fontSize + "px Arial";
     ctx.shadowColor = "black";
     ctx.fillStyle = "black";
-    eachmsg = [
+    var eachmsg = [
         "FPS: " + realTimefps,
         "按键：" + Array.from(onPressKey).join(","),
         "玩家信息------------",
@@ -73,13 +66,6 @@ function showDebug(ctx) {
     });
 
 }
+export {onrun, showDebug,fps} 
 
-// Popup.msg()
-
-
-//更新界面数值显示1s一次
-// setInterval(() => {
-    
-
-// }, 1000);
 

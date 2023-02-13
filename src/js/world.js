@@ -3,33 +3,42 @@
  */
 var canvas = document.getElementById('canvas');//获取画布元素
 var ctx = canvas.getContext('2d');
-var frameX4 = 0;
-
-
+import { player } from "./myself.js"
+import { Enemy } from "./enemy.js"
+import { skul } from "./catapult.js"
+import { showdebug } from "./config.js"
+import { showDebug } from "./game.js";
+import $ from 'jquery'
 //对象创建
 const player1 = new player(ctx, 150, 150)
 
 Enemy.init()
 
-
-// var sk = new skul(ctx, 100, 100, 10, 10)
-
+var onPressKey = new Set()//处于按下状态的按键
+export {onPressKey}
 //渲染函数
 function render() {
-    frameX4++
-    if (frameX4 == fps * 4) {
-        frameX4 = 0
-    }
-
-
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
-    ctx.drawImage(document.getElementById("bg"),0,0,2000,1125,0,0,2000,1125)
+    ctx.drawImage(document.getElementById("bg"), 0, 0, 2000, 1125, 0, 0, 2000, 1125)
+
+
+    function keyEvent() {
+        $(document).on("keydown",function (e) {
+            if (!onPressKey.has(e.key.toLowerCase())) {
+                onPressKey.add(e.key.toLowerCase())
+
+            }
+        })
+        $(document).on("keyup",function (e) {
+            onPressKey.delete('alt')
+            onPressKey.delete(e.key.toLowerCase())
+        })
+    }
+    keyEvent()
 
 
 
 
-
-   
     Enemy.movement()
 
 
@@ -61,19 +70,19 @@ function render() {
         } else if (onPressKey.has("a") && onPressKey.has("d")) {
             vx = 0
         } else if (onPressKey.has("w")) {
-            player.imgp=player.imgup
+            player.imgp = player.imgup
             vy = -player.moveSpeed
         } else if (onPressKey.has("s")) {
-            player.imgp=player.imgdown
+            player.imgp = player.imgdown
             vy = player.moveSpeed
         } else if (onPressKey.has("a")) {
-            player.imgp=player.imgleft
+            player.imgp = player.imgleft
             vx = -player.moveSpeed
         } else if (onPressKey.has("d")) {
-            player.imgp=player.imgright
+            player.imgp = player.imgright
             vx = player.moveSpeed
         } else {
-            player.imgp=player.imgcenter
+            player.imgp = player.imgcenter
             player1.draw()
         }
         player1.move(vx, vy)
@@ -84,3 +93,5 @@ function render() {
         showDebug(ctx)
     }
 }
+
+export { render, canvas, ctx,player1 }

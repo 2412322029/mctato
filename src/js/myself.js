@@ -1,6 +1,20 @@
 /**
  * 玩家
  */
+import { baseSquare } from "./base.js"
+import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
+
+import {
+    zoomRatio,
+    displayPosition,
+    showHPMPtext,
+    showdebug,
+    showHitBox,
+    showGuardingCircle
+} from "./config.js"
+import { Enemy } from "./enemy.js"
+import { onPressKey } from "./world.js"
+import { skul } from "./catapult.js"
 class player extends baseSquare {
     /**
      * 
@@ -58,16 +72,16 @@ class player extends baseSquare {
 
         // console.log(1);
         //无敌闪烁
-        if (player.isInvincible && frameX4 % 30 > 15) {
+        // if (player.isInvincible && frameX4 % 30 > 15) {
 
-            super.drawImg(player.imgflash)
-            this.showName(player.names)
-            this.beenHit()
-            this.checkHP()
-            this.showRealTimeHP()
-            this.showRealTimeMP()
-            return
-        }
+        //     super.drawImg(player.imgflash)
+        //     this.showName(player.names)
+        //     this.beenHit()
+        //     this.checkHP()
+        //     this.showRealTimeHP()
+        //     this.showRealTimeMP()
+        //     return
+        // }
         if (this.alive) {//如果没死
             var coordinate = ""
             if (displayPosition) {
@@ -84,14 +98,14 @@ class player extends baseSquare {
             this.speedUp()
         } else {
             // onrun = false
-            if (confirm("死了，复活or重开")) {
-                player1.HP = player.MaxHP
-                player1.alive = true
-                onPressKey = new Set()
-                // onrun=true
-            } else {
+            // if (confirm("死了，复活or重开")) {
+            //     player1.HP = player.MaxHP
+            //     player1.alive = true
+            //     onPressKey = new Set()
+            //     // onrun=true
+            // } else {
                 alert(1)
-            }
+            // }
             //todo 重生选择界面
         }
         // if (condition) {
@@ -113,7 +127,7 @@ class player extends baseSquare {
         this.ctx.beginPath();
         this.ctx.rect(90, 40, player.MaxHP, 30);
         this.ctx.closePath();
-        ctx.strokeStyle = "black";
+        this.ctx.strokeStyle = "black";
         this.ctx.stroke();
 
         this.ctx.font = "30px none"
@@ -139,7 +153,7 @@ class player extends baseSquare {
         this.ctx.beginPath();
         this.ctx.rect(90, 80, player.MaxMP, 30);
         this.ctx.closePath();
-        ctx.strokeStyle = "black";
+        this.ctx.strokeStyle = "black";
         this.ctx.stroke();
 
         this.ctx.font = "30px none"
@@ -313,18 +327,19 @@ class player extends baseSquare {
                 } else {
                     player.moveSpeed = player.baseSpeed //恢复基础移速
                 }
-                if (this.stamina != 0 & frameX4 % 2 < 1) {//每2帧减少
-                    this.stamina--
-                }
+                // if (this.stamina != 0 & frameX4 % 2 < 1) {//每2帧减少
+                //     this.stamina--
+                // }
             } else {//没有按住shift（恢复体力状态）
                 player.moveSpeed = player.baseSpeed //恢复基础移速
-                if (this.stamina < player.Maxstamina) {
-                    if (frameX4 % 8 < 1) {//每2帧恢复
-                        this.stamina++
-                    }
-                }
+                // if (this.stamina < player.Maxstamina) {
+                //     if (frameX4 % 8 < 1) {//每2帧恢复
+                //         this.stamina++
+                //     }
+                // }
 
             }
         }
     }
 }
+export { player}

@@ -2,6 +2,18 @@
 /**
  * 凋零骷髅
  */
+import { baseSquare } from "./base.js"
+import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
+import { player1 } from "./world.js"
+import { ctx } from "./world.js"
+import {
+    zoomRatio,
+    displayPosition,
+    showHPMPtext,
+    showdebug,
+    showHitBox,
+    showGuardingCircle
+} from "./config.js"
 class WitherSkeleton extends baseSquare {
     /**
      * 
@@ -205,3 +217,5 @@ class Enemy {
         });
     }
 }
+
+export { Enemy, Zombie}

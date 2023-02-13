@@ -1,6 +1,17 @@
 /**
  * 发射物
  */
+import { baseSquare } from "./base.js"
+import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
+import {
+    zoomRatio,
+    displayPosition,
+    showHPMPtext,
+    showdebug,
+    showHitBox,
+    showGuardingCircle
+} from "./config.js"
+import { Enemy } from "./enemy.js"
 class skul extends baseSquare {
     /**
      * 
@@ -71,3 +82,5 @@ class skul extends baseSquare {
         };
     }
 }
+
+export { skul }
