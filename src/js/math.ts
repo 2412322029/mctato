@@ -1,4 +1,4 @@
-import { Zombie } from "./enemy";
+import { baseSquare } from "./base";
 
 /**
  * 一个物体与多个物体x方向投影检测
@@ -6,9 +6,8 @@ import { Zombie } from "./enemy";
  * @param {Object} obj 
  * @returns {Array} 筛选后的对象列表
  */
-
-function Xtest(objlist: Array<Zombie>, obj: { x: number; w: any; h: any; }): Array<Zombie> {
-    var filterObjlist: Array<Zombie> = []
+function Xtest<T extends baseSquare,K extends baseSquare>(objlist: Array<T>, obj: K): Array<T> {
+    var filterObjlist: Array<T> = []
     objlist.forEach(e => {
         if (Math.abs(e.x - obj.x) <= (e.w + obj.w) / 2) {
             e.showBox(obj.w, obj.h)//检测时显示碰撞箱
@@ -23,8 +22,8 @@ function Xtest(objlist: Array<Zombie>, obj: { x: number; w: any; h: any; }): Arr
  * @param {Object} obj 
  * @returns {Array} 筛选后的对象列表
  */
-function Ytest(objlist: Array<Zombie>, obj: { y: number; x: number; w: number; h: number; }): Array<Zombie> {
-    var filterObjlist: Array<Zombie> = []
+function Ytest<T extends baseSquare>(objlist: Array<T>, obj: baseSquare): Array<T> {
+    var filterObjlist: Array<T> = []
     objlist.forEach(e => {
         e.showBox(obj.w, obj.h)//检测时显示碰撞箱
         if (Math.abs(e.y - obj.y) <= (e.h + obj.h) / 2) {
@@ -36,13 +35,13 @@ function Ytest(objlist: Array<Zombie>, obj: { y: number; x: number; w: number; h
 /**
  * X优先投影检测
  */
-function XYtest(objlist: Array<Zombie>, obj: any): Array<Zombie> {
+function XYtest<T extends baseSquare>(objlist: Array<T>, obj: baseSquare): Array<T> {
     return Ytest(Xtest(objlist, obj), obj)
 }
 /**
  * Y优先投影检测
  */
-function YXtest(objlist: Array<Zombie>, obj: any): Array<Zombie> {
+function YXtest<T extends baseSquare>(objlist: Array<T>, obj: baseSquare): Array<T> {
     return Xtest(Ytest(objlist, obj), obj)
 }
 

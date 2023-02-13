@@ -7,7 +7,7 @@ import { config } from "./config.js"
 import { Enemy } from "./enemy.js"
 import { onPressKey } from "./world.js"
 import { skul } from "./catapult.js"
-import { frame } from "./game.js"
+import { frame, onrun } from "./game.js"
 class player extends baseSquare {
     HP: number
     MP: number
@@ -24,7 +24,7 @@ class player extends baseSquare {
      * @param {Number} h 物体高度
      */
 
-    constructor(ctx: any, x?: number, y?: number, w?: number, h?: number) {
+    constructor(ctx: CanvasRenderingContext2D, x?: number, y?: number, w?: number, h?: number) {
         super(ctx, x, y, w, h)
         this.HP = player.MaxHP
         this.MP = player.MaxMP
@@ -57,7 +57,7 @@ class player extends baseSquare {
     static canSpeedUp = true //能够加速
 
     static Maxshot = 30 //最大弹幕数量
-    static shootingList:Array<any> = [] //弹幕队列
+    static shootingList: Array<any> = [] //弹幕队列
     static atShootInterval = false //是否处于射击间隔
     static ShootInterval = 100 //射击间隔(ms)
     static ShootspeedLose = 0.6 //弹幕初速度损失（带有n%的玩家速度）
@@ -67,7 +67,7 @@ class player extends baseSquare {
     * 同时绘制名字
     * @returns self
     */
-   
+
     draw() {
         //无敌闪烁
         if (player.isInvincible && frame.c % 30 > 15) {
@@ -95,20 +95,17 @@ class player extends baseSquare {
             this.showRealTimeMP()
             this.speedUp()
         } else {
-            // onrun = false
-            // if (confirm("死了，复活or重开")) {
-            //     player1.HP = player.MaxHP
-            //     player1.alive = true
-            //     onPressKey = new Set()
-            //     // onrun=true
-            // } else {
-            alert("die")
-            // }
+            onrun.c = false
+            if (confirm("死了,复活or重开")) {
+                this.HP = player.MaxHP
+                this.alive = true
+                onPressKey.clear()
+                onrun.c=true
+            } else {
+            // alert("die")
+            }
             //todo 重生选择界面
         }
-        // if (condition) {
-
-        // }
 
         return this
 
@@ -228,7 +225,7 @@ class player extends baseSquare {
     /**
      * 使用弹幕武器射击
      */
-    shoot(weapon:any) {//武器
+    shoot(weapon: any) {//武器
         player.throttle(() => {
             if (onPressKey.has("arrowright")) {
                 var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
@@ -270,7 +267,7 @@ class player extends baseSquare {
 
     }
     // 函数节流（固定时间内无论触发几次，仅执行一次）
-    static throttle(func:Function, interval: number) {
+    static throttle(func: Function, interval: number) {
         if (player.atShootInterval) {// 终止后续代码的执行
             return
         }

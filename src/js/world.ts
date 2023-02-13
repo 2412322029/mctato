@@ -97,4 +97,4 @@ function render() {
     }
 }
 
-export { render, canvas, ctx,player1 }
+export { render, canvas, ctx ,player1}
