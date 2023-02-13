@@ -1,12 +1,6 @@
 import { canvas, ctx} from "./world.js"
-import {
-    zoomRatio,
-    displayPosition,
-    showHPMPtext,
-    showdebug,
-    showHitBox,
-    showGuardingCircle
-} from "./config.js"
+import { config } from "./config.js"
+import spiriturl from "../assets/spirit.png"
 /**
  * 位置基类
  */
@@ -39,7 +33,9 @@ class baseCircle extends Position {
         super(ctx, x, y)
         this.radius = radius || 50
         this.color = color || "black"
-        this.img = document.getElementById("spirit")
+        var spirit=new Image()
+        spirit.src=spiriturl
+        this.img = spirit
 
         this.alive = true //对象是否存活
         this.outOfRange = false //是否超出画布区域（决定是否被渲染）
@@ -59,7 +55,7 @@ class baseCircle extends Position {
      */
     showName(names, fontSize, fontColor) {
         var coordinate = ""
-        if (displayPosition) {
+        if (config.displayPosition) {
             coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
         }
         names = names ?? baseCircle.names + coordinate
@@ -152,7 +148,9 @@ class baseSquare extends Position {
         this.w = w || 100
         this.h = h || 100
         this.color = color || "black"
-        this.img = document.getElementById("spirit")
+        var spirit=new Image()
+        spirit.src=spiriturl
+        this.img = spirit
 
         this.alive = true
         this.outOfRange = false
@@ -171,7 +169,7 @@ class baseSquare extends Position {
      */
     showName(names, fontSize, fontColor) {
         var coordinate = ""
-        if (displayPosition) {
+        if (config.displayPosition) {
             coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
         }
         names = names ?? baseSquare.names + coordinate
@@ -230,7 +228,7 @@ class baseSquare extends Position {
      * @param {Number} h 要显示物体的高
      */
     showBox(w, h) {
-        if (showHitBox) {
+        if (config.showHitBox) {
             this.ctx.beginPath();
             this.ctx.rect((this.x - this.w / 2) - w / 2, (this.y - this.h / 2) - h / 2,
                 this.w + w, this.h + h);

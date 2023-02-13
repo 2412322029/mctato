@@ -3,18 +3,11 @@
  */
 import { baseSquare } from "./base.js"
 import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
-
-import {
-    zoomRatio,
-    displayPosition,
-    showHPMPtext,
-    showdebug,
-    showHitBox,
-    showGuardingCircle
-} from "./config.js"
+import { config } from "./config.js"
 import { Enemy } from "./enemy.js"
 import { onPressKey } from "./world.js"
 import { skul } from "./catapult.js"
+import { frame } from "./game.js"
 class player extends baseSquare {
     /**
      * 
@@ -69,22 +62,20 @@ class player extends baseSquare {
     * @returns self
     */
     draw() {
-
-        // console.log(1);
         //无敌闪烁
-        // if (player.isInvincible && frameX4 % 30 > 15) {
+        if (player.isInvincible && frame.c % 30 > 15) {
 
-        //     super.drawImg(player.imgflash)
-        //     this.showName(player.names)
-        //     this.beenHit()
-        //     this.checkHP()
-        //     this.showRealTimeHP()
-        //     this.showRealTimeMP()
-        //     return
-        // }
+            super.drawImg(player.imgflash)
+            this.showName(player.names)
+            this.beenHit()
+            this.checkHP()
+            this.showRealTimeHP()
+            this.showRealTimeMP()
+            return
+        }
         if (this.alive) {//如果没死
             var coordinate = ""
-            if (displayPosition) {
+            if (config.displayPosition) {
                 coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
             }
             var names = player.names + coordinate
@@ -104,7 +95,7 @@ class player extends baseSquare {
             //     onPressKey = new Set()
             //     // onrun=true
             // } else {
-                alert(1)
+                alert("die")
             // }
             //todo 重生选择界面
         }
@@ -136,7 +127,7 @@ class player extends baseSquare {
 
         this.ctx.font = "20px none"
         this.ctx.fillStyle = "black";
-        if (showHPMPtext) {
+        if (config.showHPMPtext) {
             this.ctx.fillText(this.HP + "/" + player.MaxHP, 100, 60)
         }
 
@@ -159,7 +150,7 @@ class player extends baseSquare {
         this.ctx.font = "30px none"
         this.ctx.fillStyle = "#fff";
         this.ctx.fillText("MP :", 20, 105)
-        if (showHPMPtext) {
+        if (config.showHPMPtext) {
             this.ctx.font = "20px none"
             this.ctx.fillStyle = "black";
             this.ctx.fillText(this.MP + "/" + player.MaxMP, 100, 100)
@@ -199,7 +190,7 @@ class player extends baseSquare {
 
         this.ctx.strokeStyle = "black";//显示文字
         this.ctx.stroke();
-        if (showHPMPtext) {
+        if (config.showHPMPtext) {
             this.ctx.font = "20px none"
             this.ctx.fillStyle = "black";
             this.ctx.fillText(this.stamina + "/" + player.Maxstamina,
@@ -327,16 +318,16 @@ class player extends baseSquare {
                 } else {
                     player.moveSpeed = player.baseSpeed //恢复基础移速
                 }
-                // if (this.stamina != 0 & frameX4 % 2 < 1) {//每2帧减少
-                //     this.stamina--
-                // }
+                if (this.stamina != 0 & frame.c % 2 < 1) {//每2帧减少
+                    this.stamina--
+                }
             } else {//没有按住shift（恢复体力状态）
                 player.moveSpeed = player.baseSpeed //恢复基础移速
-                // if (this.stamina < player.Maxstamina) {
-                //     if (frameX4 % 8 < 1) {//每2帧恢复
-                //         this.stamina++
-                //     }
-                // }
+                if (this.stamina < player.Maxstamina) {
+                    if (frame.c % 8 < 1) {//每2帧恢复
+                        this.stamina++
+                    }
+                }
 
             }
         }

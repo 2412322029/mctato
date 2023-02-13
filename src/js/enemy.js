@@ -6,14 +6,7 @@ import { baseSquare } from "./base.js"
 import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
 import { player1 } from "./world.js"
 import { ctx } from "./world.js"
-import {
-    zoomRatio,
-    displayPosition,
-    showHPMPtext,
-    showdebug,
-    showHitBox,
-    showGuardingCircle
-} from "./config.js"
+import { config } from "./config.js"
 class WitherSkeleton extends baseSquare {
     /**
      * 
@@ -39,7 +32,7 @@ class WitherSkeleton extends baseSquare {
      */
     draw() {
         var coordinate = ""
-        if (displayPosition) {
+        if (config.displayPosition) {
             coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
         }
         var names = WitherSkeleton.names + coordinate
@@ -89,7 +82,7 @@ class Zombie extends baseSquare {
     draw() {
         if (this.alive) {
             var coordinate = ""
-            if (displayPosition) {
+            if (config.displayPosition) {
                 coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
             }
             var names = Zombie.names + coordinate
@@ -123,7 +116,7 @@ class Zombie extends baseSquare {
         ctx.strokeStyle = "black";
         this.ctx.stroke();
 
-        if (showHPMPtext) {//血条文字
+        if (config.showHPMPtext) {//血条文字
             this.ctx.font = "16px none"
             this.ctx.fillStyle = "black";
             this.ctx.fillText(Math.floor(this.HP),
@@ -181,7 +174,7 @@ class Zombie extends baseSquare {
             default:
                 break;
         }
-        if (showGuardingCircle) {
+        if (config.showGuardingCircle) {
             this.ctx.beginPath();//警戒圈
             this.ctx.strokeStyle = 'red';
             this.ctx.arc(this.x, this.y, Zombie.guardingRadius, 0, Math.PI * 2);

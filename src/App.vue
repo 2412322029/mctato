@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import view from './components/view.vue'
+import views from './components/view.vue'
 </script>
 
 <template>
-  <view/>
+  <views/>
 </template>
 
 <style scoped>

@@ -6,12 +6,6 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
 }
 
 a {
@@ -29,12 +23,9 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
 
 button {
   border-radius: 8px;
@@ -55,16 +46,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.card {
-  padding: 2em;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -77,4 +58,13 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+#canvas {
+  background:rgba(255, 255, 255, 0);
+  width: 1200px;
+  height: 675px;
+  display: block;
+  border: rgb(0, 255, 81) solid 3px;
+  background-color: white;
+  transform-origin: 0 0;
 }

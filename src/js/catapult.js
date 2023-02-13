@@ -3,15 +3,8 @@
  */
 import { baseSquare } from "./base.js"
 import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
-import {
-    zoomRatio,
-    displayPosition,
-    showHPMPtext,
-    showdebug,
-    showHitBox,
-    showGuardingCircle
-} from "./config.js"
 import { Enemy } from "./enemy.js"
+import { config } from "./config.js"
 class skul extends baseSquare {
     /**
      * 
@@ -52,7 +45,7 @@ class skul extends baseSquare {
     draw() {
         if (this.alive) {
             var coordinate = ""
-            if (displayPosition) {
+            if (config.displayPosition) {
                 coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
             }
             var names = coordinate

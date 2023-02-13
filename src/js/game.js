@@ -1,36 +1,38 @@
 /**
  * 世界循环
  */
-import {render} from './world.js'
+import { render } from './world.js'
 import { onPressKey } from "./world.js"
 import { player } from './myself.js'
 import { Enemy } from './enemy.js'
-var onrun = true//是否在运行
+var onrun ={"c":true}//是否在运行
 var fps = 100//帧率
 var realTimefps = 0//实际fps
 var lastCalledTime //上一帧时间
-
 var fpsInterval = 1000 / fps
 var last = new Date().getTime()
 var rafId
+var frame={c:1}
 function animloop() {
+    frame.c++
+    frame.c = frame.c > fps ? 0 : frame.c
     rafId = requestAnimationFrame(animloop);
     var now = new Date().getTime()
     var elapsed = now - last;
     if (elapsed > fpsInterval) {
         last = now - (elapsed % fpsInterval);
         render();//world.js中的渲染函数
-        
-        if(!lastCalledTime) {//计算实时帧率
+
+        if (!lastCalledTime) {//计算实时帧率
             lastCalledTime = Date.now();
             realTimefps = 0;
             return;
-         }
-        var delta =1000 / (Date.now() - lastCalledTime);
+        }
+        var delta = 1000 / (Date.now() - lastCalledTime);
         lastCalledTime = Date.now();
-        realTimefps =Math.floor(delta);
+        realTimefps = Math.floor(delta);
 
-        if (!onrun) {
+        if (!onrun.c) {
             cancelAnimationFrame(rafId)
         }
     }
@@ -50,22 +52,23 @@ function showDebug(ctx) {
         "   基础移速: " + player.baseSpeed,
         "   实时移速: " + player.moveSpeed,
         "   移速加成: " + player.speedAdd,
-        "   体力消耗速度: " + player.staminaBurnRate+"点每30帧",
-        "   体力恢复速度: " + player.staminaRecoveryRate+"点每30帧",
+        "   体力消耗速度: " + player.staminaBurnRate + "点每30帧",
+        "   体力恢复速度: " + player.staminaRecoveryRate + "点每30帧",
         "   最大弹幕数: " + player.Maxshot,
         "   显示弹幕数：" + player.shootingList.length,
         "   射击间隔: " + player.ShootInterval + " ms",
         "   弹幕初速度损失: " + player.ShootspeedLose,
-        "   是否无敌: "+ player.isInvincible,
+        "   是否无敌: " + player.isInvincible,
         "世界信息------------",
-        "   怪物数量: "+ Enemy.list.length,
-        "   怪物数量: "+ Enemy.list.length,
+        "   怪物数量: " + Enemy.list.length,
+        "   怪物数量: " + Enemy.list.length,
     ]
     eachmsg.forEach((msg, index) => {
         ctx.fillText(msg, 10, 200 + fontSize * index + 5)
     });
 
 }
-export {onrun, showDebug,fps} 
+
+export { onrun,animloop, showDebug, fps,frame}
 
 

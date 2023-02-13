@@ -6,9 +6,10 @@ var ctx = canvas.getContext('2d');
 import { player } from "./myself.js"
 import { Enemy } from "./enemy.js"
 import { skul } from "./catapult.js"
-import { showdebug } from "./config.js"
+import { config } from "./config.js"
 import { showDebug } from "./game.js";
 import $ from 'jquery'
+import bgurl from '../assets/bg.png'
 //对象创建
 const player1 = new player(ctx, 150, 150)
 
@@ -19,7 +20,9 @@ export {onPressKey}
 //渲染函数
 function render() {
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
-    ctx.drawImage(document.getElementById("bg"), 0, 0, 2000, 1125, 0, 0, 2000, 1125)
+    var bg=new Image()
+    bg.src=bgurl
+    ctx.drawImage(bg, 0, 0, 2000, 1125, 0, 0, 2000, 1125)
 
 
     function keyEvent() {
@@ -89,7 +92,7 @@ function render() {
         //
 
     }
-    if (showdebug) {
+    if (config.showdebug) {
         showDebug(ctx)
     }
 }
