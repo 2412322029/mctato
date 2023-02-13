@@ -2,13 +2,19 @@
  * 玩家
  */
 import { baseSquare } from "./base.js"
-import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
+import { XYtest } from "./math.js"
 import { config } from "./config.js"
 import { Enemy } from "./enemy.js"
 import { onPressKey } from "./world.js"
 import { skul } from "./catapult.js"
 import { frame } from "./game.js"
 class player extends baseSquare {
+    HP: number
+    MP: number
+    stamina: number
+    isOnShooting: boolean
+    vx!: number
+    vy!: number
     /**
      * 
      * @param {*} ctx 
@@ -18,7 +24,7 @@ class player extends baseSquare {
      * @param {Number} h 物体高度
      */
 
-    constructor(ctx, x, y, w, h) {
+    constructor(ctx: any, x?: number, y?: number, w?: number, h?: number) {
         super(ctx, x, y, w, h)
         this.HP = player.MaxHP
         this.MP = player.MaxMP
@@ -30,10 +36,10 @@ class player extends baseSquare {
      * 固有属性
      */
     static names = "我自己"
-
+    static imgcenter = [9, 0] //正常
     static imgp = player.imgcenter//现在图像位置
 
-    static imgcenter = [9, 0] //正常
+
     static imgflash = [9, 1] //变白
     static imgup = [9, 2] //朝上
     static imgleft = [9, 3] //朝左
@@ -51,7 +57,7 @@ class player extends baseSquare {
     static canSpeedUp = true //能够加速
 
     static Maxshot = 30 //最大弹幕数量
-    static shootingList = [] //弹幕队列
+    static shootingList:Array<any> = [] //弹幕队列
     static atShootInterval = false //是否处于射击间隔
     static ShootInterval = 100 //射击间隔(ms)
     static ShootspeedLose = 0.6 //弹幕初速度损失（带有n%的玩家速度）
@@ -61,6 +67,7 @@ class player extends baseSquare {
     * 同时绘制名字
     * @returns self
     */
+   
     draw() {
         //无敌闪烁
         if (player.isInvincible && frame.c % 30 > 15) {
@@ -71,7 +78,7 @@ class player extends baseSquare {
             this.checkHP()
             this.showRealTimeHP()
             this.showRealTimeMP()
-            return
+            return this
         }
         if (this.alive) {//如果没死
             var coordinate = ""
@@ -95,7 +102,7 @@ class player extends baseSquare {
             //     onPressKey = new Set()
             //     // onrun=true
             // } else {
-                alert("die")
+            alert("die")
             // }
             //todo 重生选择界面
         }
@@ -198,31 +205,30 @@ class player extends baseSquare {
         }
 
     }
-    move(vx, vy) {
+    move(vx: number, vy: number) {
         this.vx = vx
         this.vy = vy
         this.x += vx
         this.y += vy
-        if (this.x-this.w/2-108<=0) {
-            this.x=this.w/2+108
+        if (this.x - this.w / 2 - 108 <= 0) {
+            this.x = this.w / 2 + 108
         }
-        if (this.x+this.w/2+108>=2000) {
-            this.x=2000-this.w/2-108
+        if (this.x + this.w / 2 + 108 >= 2000) {
+            this.x = 2000 - this.w / 2 - 108
         }
-        if (this.y-this.h/2-85<=0) {
-            this.y=this.h/2+85
+        if (this.y - this.h / 2 - 85 <= 0) {
+            this.y = this.h / 2 + 85
         }
-        if (this.y+this.h/2+75>=1125) {
-            this.y=1125-this.h/2-70
+        if (this.y + this.h / 2 + 75 >= 1125) {
+            this.y = 1125 - this.h / 2 - 70
         }
-        
+
         this.draw()
     }
     /**
      * 使用弹幕武器射击
-     * @param {Object} weapon 武器类名
      */
-    shoot(weapon) {//武器
+    shoot(weapon:any) {//武器
         player.throttle(() => {
             if (onPressKey.has("arrowright")) {
                 var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
@@ -264,7 +270,7 @@ class player extends baseSquare {
 
     }
     // 函数节流（固定时间内无论触发几次，仅执行一次）
-    static throttle(func, interval) {
+    static throttle(func:Function, interval: number) {
         if (player.atShootInterval) {// 终止后续代码的执行
             return
         }
@@ -281,8 +287,8 @@ class player extends baseSquare {
         if (this.HP <= 0) {
             this.alive = false
             this.HP = 0
-        } else if (this.HP >= this.MaxHP) {
-            this.HP = this.MaxHP
+        } else if (this.HP >= player.MaxHP) {
+            this.HP = player.MaxHP
         }
     }
     /**
@@ -318,7 +324,7 @@ class player extends baseSquare {
                 } else {
                     player.moveSpeed = player.baseSpeed //恢复基础移速
                 }
-                if (this.stamina != 0 & frame.c % 2 < 1) {//每2帧减少
+                if (this.stamina != 0 && frame.c % 2 < 1) {//每2帧减少
                     this.stamina--
                 }
             } else {//没有按住shift（恢复体力状态）
@@ -333,4 +339,4 @@ class player extends baseSquare {
         }
     }
 }
-export { player}
+export { player }

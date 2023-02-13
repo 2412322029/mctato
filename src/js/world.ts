@@ -1,8 +1,8 @@
 /**
  * 物体绘制
  */
-var canvas = document.getElementById('canvas');//获取画布元素
-var ctx = canvas.getContext('2d');
+var canvas = document.getElementById('canvas') as HTMLCanvasElement;//获取画布元素
+var ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 import { player } from "./myself.js"
 import { Enemy } from "./enemy.js"
 import { skul } from "./catapult.js"
@@ -26,13 +26,13 @@ function render() {
 
 
     function keyEvent() {
-        $(document).on("keydown",function (e) {
+        $(document).on("keydown",function (e: { key: string; }) {
             if (!onPressKey.has(e.key.toLowerCase())) {
                 onPressKey.add(e.key.toLowerCase())
 
             }
         })
-        $(document).on("keyup",function (e) {
+        $(document).on("keyup",function (e: { key: string; }) {
             onPressKey.delete('alt')
             onPressKey.delete(e.key.toLowerCase())
         })

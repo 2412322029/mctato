@@ -8,7 +8,7 @@ import { Enemy } from './enemy.js'
 var onrun ={"c":true}//是否在运行
 var fps = 100//帧率
 var realTimefps = 0//实际fps
-var lastCalledTime //上一帧时间
+var lastCalledTime:number //上一帧时间
 var fpsInterval = 1000 / fps
 var last = new Date().getTime()
 var rafId
@@ -39,7 +39,7 @@ function animloop() {
 }
 animloop();//开始
 
-function showDebug(ctx) {
+function showDebug(ctx:CanvasRenderingContext2D) {
     var fontSize = 25
     ctx.font = fontSize + "px Arial";
     ctx.shadowColor = "black";

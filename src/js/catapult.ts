@@ -2,10 +2,19 @@
  * 发射物
  */
 import { baseSquare } from "./base.js"
-import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
-import { Enemy } from "./enemy.js"
+import { XYtest } from "./math.js"
+import { Enemy, Zombie } from "./enemy.js"
 import { config } from "./config.js"
 class skul extends baseSquare {
+    imgp: number[]
+    goneRenge: number
+    speedx: number
+    speedy: number
+    initvx: number
+    initvy: number
+    damage: number
+    direction?: 'left' | "right" | "up" | "down"
+    knockDistance: number
     /**
      * 
      * @param {*} ctx 
@@ -15,7 +24,7 @@ class skul extends baseSquare {
      * @param {Number} h 物体高度
      * @param {String} direction 方向
      */
-    constructor(ctx, x, y, w, h, direction) {
+    constructor(ctx: any, x: number, y: number, w: number, h: number, direction?: 'left' | "right" | "up" | "down") {
         super(ctx, x, y, w, h)
         this.imgp = [8, 0]
         this.goneRenge = 0 //已经走的距离
@@ -55,7 +64,7 @@ class skul extends baseSquare {
         }
         return this
     }
-    move(vx, vy) {
+    move(vx: number, vy: number) {
         this.goneRenge += Math.abs(vx) + Math.abs(vy)
         this.x += vx
         this.y += vy
@@ -64,7 +73,7 @@ class skul extends baseSquare {
     }
     aim() {
         if (this.alive) {
-            XYtest(Enemy.list, this).forEach(e => {
+            XYtest(<Array<Zombie>>Enemy.list, this).forEach(e => {
                 if (e.alive && this.alive) {
                     e.HP -= this.damage
                     e.status = 2
@@ -76,4 +85,6 @@ class skul extends baseSquare {
     }
 }
 
+
 export { skul }
+

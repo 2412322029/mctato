@@ -3,11 +3,12 @@
  * 凋零骷髅
  */
 import { baseSquare } from "./base.js"
-import { Xtest, Ytest, XYtest, YXtest, P2Pdistance } from "./math.js"
-import { player1 } from "./world.js"
+import { P2Pdistance } from "./math.js"
+import { canvas, player1 } from "./world.js"
 import { ctx } from "./world.js"
 import { config } from "./config.js"
 class WitherSkeleton extends baseSquare {
+    imgp: [number,number]
     /**
      * 
      * @param {*} ctx 
@@ -17,7 +18,7 @@ class WitherSkeleton extends baseSquare {
      * @param {Number} h 物体高度
      */
 
-    constructor(ctx, x, y, w, h) {
+    constructor(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
         super(ctx, x, y, w, h)
         this.imgp = [8, 0]
     }
@@ -42,9 +43,14 @@ class WitherSkeleton extends baseSquare {
     }
 }
 /**
- * 苦力怕
+ * 僵尸---基础怪物
  */
 class Zombie extends baseSquare {
+    HP: number
+    hitDamage: number
+    knockDistance: number
+    status: number
+    imgp: number[]
     /**
      * 
      * @param {*} ctx 
@@ -54,7 +60,7 @@ class Zombie extends baseSquare {
      * @param {Number} h 物体高度
      */
 
-    constructor(ctx, x, y, w, h) {
+    constructor(ctx: any, x: number, y: number, w?: number, h?: number) {
         super(ctx, x, y, w, h)
         this.HP = Zombie.MaxHP
         this.hitDamage = 10
@@ -119,7 +125,7 @@ class Zombie extends baseSquare {
         if (config.showHPMPtext) {//血条文字
             this.ctx.font = "16px none"
             this.ctx.fillStyle = "black";
-            this.ctx.fillText(Math.floor(this.HP),
+            this.ctx.fillText(Math.floor(this.HP).toString(),
                 this.x - this.w / 2 + 20,
                 this.y + this.h / 2 + 24)
             this.ctx.fillText("/ " + Zombie.MaxHP,
@@ -132,7 +138,7 @@ class Zombie extends baseSquare {
      * 检查血量并且纠正
      */
     checkHP() {
-        if (this.HP == NaN) {
+        if (Number.isNaN(this.HP)) {
             this.HP = 0
             this.alive = false
         }
@@ -140,8 +146,8 @@ class Zombie extends baseSquare {
         if (this.HP <= 0) {
             this.HP = 0
             this.alive = false
-        } else if (this.HP >= this.MaxHP) {
-            this.HP = this.MaxHP
+        } else if (this.HP >= Zombie.MaxHP) {
+            this.HP = Zombie.MaxHP
         }
     }
     /**
@@ -190,10 +196,10 @@ class Zombie extends baseSquare {
 }
 
 class Enemy {
-    static list = []
+    static list:Zombie[] = []
     static init() {
         for (let i = 0; i < 5; i++) {
-            var d = new Zombie(ctx, 500+Math.floor(Math.random() * (canvas.width-300)),
+            let d:Zombie = new Zombie(ctx, 500+Math.floor(Math.random() * (canvas.width-300)),
                500+ Math.floor(Math.random() * (canvas.height-300)))
             Enemy.list.push(d)
         }
