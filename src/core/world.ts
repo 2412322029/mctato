@@ -9,7 +9,6 @@ import { skul } from "./entities/catapult"
 import { config } from "./config"
 import { showDebug } from "./game";
 import $ from 'jquery'
-import { imgload } from './imgloader'
 import { Wall } from "./entities/wall";
 //对象创建
 
@@ -35,7 +34,6 @@ keyEvents()
 //渲染函数
 function render() {
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
-    ctx.drawImage(imgload.bg, 0, 0, 2000, 1125, 0, 0, 2000, 1125)
     Wall.drawall()
     Enemy.movement();
     

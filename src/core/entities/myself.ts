@@ -309,6 +309,8 @@ class player extends baseSquare {
             }
 
             XYtest(Wall.walllist, this).forEach(e => {
+                
+
                 if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
                     if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
                         this.x  = e.x + e.w / 2 + this.w / 2 + 1

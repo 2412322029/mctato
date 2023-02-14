@@ -1,4 +1,4 @@
-import { canvas, ctx } from "../world"
+import { canvas } from "../world"
 import { config } from "../config"
 import { imgload } from "../imgloader"
 /**
@@ -100,7 +100,7 @@ class baseSquare extends Position {
      * @returns {boolean} 
      */
     isInMe(tx: number, ty: number): boolean {
-        ctx.beginPath();
+        this.ctx.beginPath();
         this.ctx.rect(this.x - this.w / 2, this.y - this.h / 2,
             this.w, this.h);
         return (this.ctx.isPointInPath(tx, ty))

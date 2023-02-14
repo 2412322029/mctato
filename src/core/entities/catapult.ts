@@ -6,6 +6,7 @@ import { XYtest } from "../math.js"
 import { Enemy, Zombie } from "./enemy.js"
 import { config } from "../config.js"
 import { Wall } from "./wall.js"
+import { ctx2, Effects } from "../effects.js"
 class skul extends baseSquare {
     imgp: number[]
     goneRenge: number
@@ -68,7 +69,7 @@ class skul extends baseSquare {
     }
     checkWall() {
         XYtest(Wall.walllist, this).forEach(e => {
-           this.alive=false
+            this.alive = false
         })
     }
     move(vx: number, vy: number) {
@@ -85,6 +86,8 @@ class skul extends baseSquare {
                     e.HP -= this.damage
                     e.status = 2
                     e.beenKnockBack(this.x, this.y, this.knockDistance, this.direction)
+                    new Effects.blast(ctx2, this.x, this.y, 10)
+                    new Effects.damText(ctx2,e.x,e.y,this.damage.toString(),1000)
                     this.alive = false
                 }
             })

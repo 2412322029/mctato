@@ -1,7 +1,7 @@
 import { baseSquare } from "./base";
 import { ctx } from '../world'
 
-export class Wall extends baseSquare {
+class Wall extends baseSquare {
     constructor(ctx: CanvasRenderingContext2D, x?: number, y?: number, w?: number, h?: number) {
         super(ctx, x, y, w, h);
     }
@@ -30,3 +30,4 @@ export class Wall extends baseSquare {
         })
     }
 }
+export {Wall}
