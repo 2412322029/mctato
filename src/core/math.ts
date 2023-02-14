@@ -1,4 +1,4 @@
-import { baseSquare } from "./base";
+import { baseSquare } from "./entities/base";
 
 /**
  * 一个物体与多个物体x方向投影检测

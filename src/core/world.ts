@@ -3,14 +3,14 @@
  */
 var canvas = document.getElementById('canvas') as HTMLCanvasElement;//获取画布元素
 var ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-import { player } from "./myself"
-import { Enemy } from "./enemy"
-import { skul } from "./catapult"
+import { player } from "./entities/myself"
+import { Enemy } from "./entities/enemy"
+import { skul } from "./entities/catapult"
 import { config } from "./config"
 import { showDebug } from "./game";
 import $ from 'jquery'
 import { imgload } from './imgloader'
-import { Wall } from "./wall";
+import { Wall } from "./entities/wall";
 //对象创建
 
 const player1 = new player(ctx, 150, 150)

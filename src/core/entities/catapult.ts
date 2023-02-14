@@ -2,9 +2,9 @@
  * 发射物
  */
 import { baseSquare } from "./base.js"
-import { XYtest } from "./math.js"
+import { XYtest } from "../math.js"
 import { Enemy, Zombie } from "./enemy.js"
-import { config } from "./config.js"
+import { config } from "../config.js"
 import { Wall } from "./wall.js"
 class skul extends baseSquare {
     imgp: number[]

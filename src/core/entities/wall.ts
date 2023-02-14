@@ -1,5 +1,5 @@
 import { baseSquare } from "./base";
-import {ctx} from './world'
+import {ctx} from '../world'
 
 export class Wall{
     static walllist:Array<baseSquare>=[]

@@ -3,10 +3,10 @@
  * 凋零骷髅
  */
 import { baseSquare } from "./base"
-import { P2Pdistance, XYtest } from "./math"
-import { canvas, player1 } from "./world"
-import { ctx } from "./world"
-import { config } from "./config"
+import { P2Pdistance, XYtest } from "../math"
+import { canvas, player1 } from "../world"
+import { ctx } from "../world"
+import { config } from "../config"
 import { Wall } from "./wall"
 class WitherSkeleton extends baseSquare {
     imgp: [number,number]

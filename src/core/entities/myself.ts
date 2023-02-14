@@ -2,12 +2,12 @@
  * 玩家
  */
 import { baseSquare } from "./base"
-import { XYtest } from "./math"
-import { config } from "./config"
+import { XYtest } from "../math"
+import { config } from "../config"
 import { Enemy } from "./enemy"
-import { onPressKey } from "./world"
+import { onPressKey } from "../world"
 import { skul } from "./catapult"
-import { frame, onrun } from "./game"
+import { frame, onrun } from "../game"
 import { Wall } from "./wall"
 class player extends baseSquare {
     HP: number
@@ -311,21 +311,21 @@ class player extends baseSquare {
             XYtest(Wall.walllist, this).forEach(e => {
                 if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
                     if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
-                        this.x = e.x + e.w / 2 + this.w / 2 + 1
+                        this.x += 10
                         return
                     }
                     if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
-                        this.x = e.x - e.w / 2 - this.w / 2 - 1
+                        this.x -= 10
                         return
                     }
                 } else {
 
                     if (this.y > e.y && this.y - this.h / 2 - e.w / 2 < e.y) {
-                        this.y = e.y + e.w / 2 + this.h / 2 + 1
+                        this.y += 10
                         return
                     }
                     if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
-                        this.y = e.y - e.w / 2 - this.w / 2 - 1
+                        this.y -= 10
                         return
                     }
                 }

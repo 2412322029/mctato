@@ -3,8 +3,8 @@
  */
 import { render } from './world'
 import { onPressKey } from "./world"
-import { player } from './myself'
-import { Enemy } from './enemy'
+import { player } from './entities/myself'
+import { Enemy } from './entities/enemy'
 var onrun ={"c":true}//是否在运行
 var fps = 100//帧率
 var realTimefps = 0//实际fps

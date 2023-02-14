@@ -1,6 +1,6 @@
-import { canvas, ctx } from "./world"
-import { config } from "./config"
-import { imgload } from "./imgloader"
+import { canvas, ctx } from "../world"
+import { config } from "../config"
+import { imgload } from "../imgloader"
 /**
  * 位置基类
  */
