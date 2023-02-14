@@ -311,21 +311,21 @@ class player extends baseSquare {
             XYtest(Wall.walllist, this).forEach(e => {
                 if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
                     if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
-                        this.x += 10
+                        this.x  = e.x + e.w / 2 + this.w / 2 + 1
                         return
                     }
                     if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
-                        this.x -= 10
+                        this.x = e.x - e.w / 2 - this.w / 2 - 1
                         return
                     }
                 } else {
 
-                    if (this.y > e.y && this.y - this.h / 2 - e.w / 2 < e.y) {
-                        this.y += 10
+                    if (this.y > e.y && this.y - this.h / 2 - e.h / 2 < e.y) {
+                        this.y = e.y + e.h / 2 + this.h / 2 + 1
                         return
                     }
                     if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
-                        this.y -= 10
+                        this.y  = e.y - e.h / 2 - this.h / 2 - 1
                         return
                     }
                 }
