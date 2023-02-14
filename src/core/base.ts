@@ -1,6 +1,6 @@
 import { canvas, ctx } from "./world"
 import { config } from "./config"
-import spiriturl from "../assets/spirit.png"
+import { imgload } from "./imgloader"
 /**
  * 位置基类
  */
@@ -31,9 +31,7 @@ class baseSquare extends Position {
         this.w = w || 100
         this.h = h || 100
         this.color = color || "black"
-        var spirit = new Image()
-        spirit.src = spiriturl
-        this.img = spirit
+        this.img = imgload.spirit
         this.alive = true
         this.outOfRange = false
     }
@@ -50,6 +48,9 @@ class baseSquare extends Position {
      * @returns self
      */
     showName(names: string, fontSize?: number, fontColor?: string) {
+        if (!config.showNameAbove) {
+            return
+        }
         var coordinate = ""
         if (config.displayPosition) {
             coordinate = `(${Math.floor(this.x)},${Math.floor(this.y)})`
@@ -83,7 +84,7 @@ class baseSquare extends Position {
      * @param {Array} position 对应精灵图位置（第几排，第几列）
      * @returns self
      */
-    drawImg(position = [0, 0], sizex = 100, sizey = 100) {
+    drawImg(position: Array<any> = [0, 0], sizex = 100, sizey = 100) {
         //第几排，第几列
         if (!this.isOutOfRange()) {
             this.ctx.drawImage(this.img, position[0] * 100, position[1] * 100, 100, 100,

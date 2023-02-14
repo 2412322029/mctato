@@ -1,10 +1,10 @@
 /**
  * 世界循环
  */
-import { render } from './world.js'
-import { onPressKey } from "./world.js"
-import { player } from './myself.js'
-import { Enemy } from './enemy.js'
+import { render } from './world'
+import { onPressKey } from "./world"
+import { player } from './myself'
+import { Enemy } from './enemy'
 var onrun ={"c":true}//是否在运行
 var fps = 100//帧率
 var realTimefps = 0//实际fps
@@ -37,7 +37,7 @@ function animloop() {
         }
     }
 }
-animloop();//开始
+// animloop();//开始
 
 function showDebug(ctx:CanvasRenderingContext2D) {
     var fontSize = 25

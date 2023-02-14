@@ -1,13 +1,14 @@
 /**
  * 玩家
  */
-import { baseSquare } from "./base.js"
-import { XYtest } from "./math.js"
-import { config } from "./config.js"
-import { Enemy } from "./enemy.js"
-import { onPressKey } from "./world.js"
-import { skul } from "./catapult.js"
-import { frame, onrun } from "./game.js"
+import { baseSquare } from "./base"
+import { XYtest } from "./math"
+import { config } from "./config"
+import { Enemy } from "./enemy"
+import { onPressKey } from "./world"
+import { skul } from "./catapult"
+import { frame, onrun } from "./game"
+import { Wall } from "./wall"
 class player extends baseSquare {
     HP: number
     MP: number
@@ -100,9 +101,9 @@ class player extends baseSquare {
                 this.HP = player.MaxHP
                 this.alive = true
                 onPressKey.clear()
-                onrun.c=true
+                onrun.c = true
             } else {
-            // alert("die")
+                // alert("die")
             }
             //todo 重生选择界面
         }
@@ -294,18 +295,43 @@ class player extends baseSquare {
      */
     beenHit() {
         if (this.alive) {// 确保玩家还活着
-            if (player.isInvincible) {
-                return
+            if (!player.isInvincible) {
+                XYtest(Enemy.list, this).forEach(e => {
+                    if (e.alive) {
+                        this.HP -= e.hitDamage
+                        super.beenKnockBack(e.x, e.y, e.knockDistance)
+                        player.isInvincible = true
+                        setTimeout(() => {
+                            player.isInvincible = false
+                        }, player.invincibleTime)
+                    }
+                })
             }
-            XYtest(Enemy.list, this).forEach(e => {
-                if (e.alive) {
-                    this.HP -= e.hitDamage
-                    super.beenKnockBack(e.x, e.y, e.knockDistance)
-                    player.isInvincible = true
-                    setTimeout(() => {
-                        player.isInvincible = false
-                    }, player.invincibleTime)
+
+            XYtest(Wall.walllist, this).forEach(e => {
+                if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
+                    if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
+                        this.x = e.x + e.w / 2 + this.w / 2 + 1
+                        return
+                    }
+                    if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
+                        this.x = e.x - e.w / 2 - this.w / 2 - 1
+                        return
+                    }
+                } else {
+
+                    if (this.y > e.y && this.y - this.h / 2 - e.w / 2 < e.y) {
+                        this.y = e.y + e.w / 2 + this.h / 2 + 1
+                        return
+                    }
+                    if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
+                        this.y = e.y - e.w / 2 - this.w / 2 - 1
+                        return
+                    }
                 }
+
+
+
             })
         };
     }

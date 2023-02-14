@@ -2,11 +2,12 @@
 /**
  * 凋零骷髅
  */
-import { baseSquare } from "./base.js"
-import { P2Pdistance } from "./math.js"
-import { canvas, player1 } from "./world.js"
-import { ctx } from "./world.js"
-import { config } from "./config.js"
+import { baseSquare } from "./base"
+import { P2Pdistance, XYtest } from "./math"
+import { canvas, player1 } from "./world"
+import { ctx } from "./world"
+import { config } from "./config"
+import { Wall } from "./wall"
 class WitherSkeleton extends baseSquare {
     imgp: [number,number]
     /**
@@ -97,8 +98,33 @@ class Zombie extends baseSquare {
             super.showName(names)
             this.showRealTimeHP()
             this.guardingCircle()
+            this.checkWall()
         }
         return this
+    }
+    checkWall() {
+        XYtest(Wall.walllist, this).forEach(e => {
+            if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
+                if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
+                    this.x = e.x + e.w / 2 + this.w / 2 + 1
+                    return
+                }
+                if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
+                    this.x = e.x - e.w / 2 - this.w / 2 - 1
+                    return
+                }
+            } else {
+
+                if (this.y > e.y && this.y - this.h / 2 - e.w / 2 < e.y) {
+                    this.y = e.y + e.w / 2 + this.h / 2 + 1
+                    return
+                }
+                if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
+                    this.y = e.y - e.w / 2 - this.w / 2 - 1
+                    return
+                }
+            }
+        })
     }
     showRealTimeHP() {
         var HPpercent

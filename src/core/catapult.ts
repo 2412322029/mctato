@@ -5,6 +5,7 @@ import { baseSquare } from "./base.js"
 import { XYtest } from "./math.js"
 import { Enemy, Zombie } from "./enemy.js"
 import { config } from "./config.js"
+import { Wall } from "./wall.js"
 class skul extends baseSquare {
     imgp: number[]
     goneRenge: number
@@ -60,9 +61,15 @@ class skul extends baseSquare {
             var names = coordinate
             super.drawImg(this.imgp, this.w, this.h)
             // super.showName(names)
+            this.checkWall()
 
         }
         return this
+    }
+    checkWall() {
+        XYtest(Wall.walllist, this).forEach(e => {
+           this.alive=false
+        })
     }
     move(vx: number, vy: number) {
         this.goneRenge += Math.abs(vx) + Math.abs(vy)

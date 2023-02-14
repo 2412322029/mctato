@@ -68,3 +68,9 @@ button:focus-visible {
   background-color: white;
   transform-origin: 0 0;
 }
+
+#app{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
