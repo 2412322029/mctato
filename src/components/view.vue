@@ -9,10 +9,11 @@ import { imgload } from '../core/imgloader'
 // import "../core/game"
 import { config } from "../core/config"
 import { canvas } from '../core/world'
-import { canvas2,Effects,ctx2 } from "../core/effects"
+import { canvas2, Effects, ctx2 } from "../core/effects"
 import { onrun, animloop } from '../core/game'
 
 import * as dat from "dat.gui";
+import { Howler } from "../core/audio"
 const gui = new dat.GUI();
 gui.add(config, "zoomRatio", 0.3, 1.5).onChange((value: number) => {
     var c = <HTMLCanvasElement>canvas;
@@ -28,15 +29,21 @@ gui.add(config, "showHitBox")
 gui.add(config, "showGuardingCircle")
 gui.add(config, "showdebug")
 gui.add(config, "showNameAbove")
+
 gui.add(onrun, "c").name("开始").onChange((value: boolean) => {
     animloop()
 })
-
+var vv={
+    v:0.2
+}
+gui.add(vv, "v", 0, 1, 0.1,).name("音量").onChange((newv:any)=>{
+    Howler.volume(newv)
+})
 imgload.init()
 animloop()
 
 onMounted(() => {
-    $("#backg").attr("src",imgload.bg.src);
+    $("#backg").attr("src", imgload.bg.src);
 })
 
 

@@ -8,8 +8,9 @@ import { canvas, player1 } from "../world"
 import { ctx } from "../world"
 import { config } from "../config"
 import { Wall } from "./wall"
+import { audio } from "../audio"
 class WitherSkeleton extends baseSquare {
-    imgp: [number,number]
+    imgp: [number, number]
     /**
      * 
      * @param {*} ctx 
@@ -52,6 +53,7 @@ class Zombie extends baseSquare {
     knockDistance: number
     status: number
     imgp: number[]
+    alanger: boolean
     /**
      * 
      * @param {*} ctx 
@@ -69,7 +71,8 @@ class Zombie extends baseSquare {
         this.knockDistance = this.w / 2//击退距离
         this.status = 0 //状态 0游荡/1跟随/2仇恨
 
-        this.imgp=Zombie.imgnomal//现在图像位置
+        this.imgp = Zombie.imgnomal//现在图像位置
+        this.alanger = false //已经发出生气声音
     }
     /**
      * 固有属性
@@ -198,6 +201,8 @@ class Zombie extends baseSquare {
                 super.moveTo(player1.x, player1.y, Zombie.speed)
                 break;
             case 2:
+                if (!this.alanger) { audio.anger.play() }
+                this.alanger = true
                 this.imgp = Zombie.imgrage
                 // console.log(2);
                 super.moveTo(player1.x, player1.y, Zombie.speed * 2)
@@ -222,11 +227,11 @@ class Zombie extends baseSquare {
 }
 
 class Enemy {
-    static list:Zombie[] = []
+    static list: Zombie[] = []
     static init() {
         for (let i = 0; i < 5; i++) {
-            let d:Zombie = new Zombie(ctx, 500+Math.floor(Math.random() * (canvas.width-300)),
-               500+ Math.floor(Math.random() * (canvas.height-300)))
+            let d: Zombie = new Zombie(ctx, 500 + Math.floor(Math.random() * (canvas.width - 300)),
+                500 + Math.floor(Math.random() * (canvas.height - 300)))
             Enemy.list.push(d)
         }
 
@@ -236,6 +241,7 @@ class Enemy {
             if (e.alive) {
                 e.draw()
             } else {
+                audio.die.play()
                 Enemy.list.splice(index, 1)
             }
 
@@ -243,4 +249,4 @@ class Enemy {
     }
 }
 
-export { Enemy, Zombie}
+export { Enemy, Zombie }
