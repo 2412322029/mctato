@@ -47,7 +47,7 @@ class damText {
         this.ctx.fillStyle = "red"
         this.ctx.fillText("-" + this.text, this.x, this.y);
         setTimeout(() => {
-            this.ctx.clearRect(this.x, this.y-fontSize*2, 100, fontSize*2);
+            this.ctx.clearRect(this.x, this.y-fontSize*2, this.ctx.measureText("-" + this.text).width, fontSize*2);
         }, this.t);
     }
 }

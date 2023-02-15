@@ -7,6 +7,7 @@ import { Enemy, Zombie } from "./enemy.js"
 import { config } from "../config.js"
 import { Wall } from "./wall.js"
 import { ctx2, Effects } from "../effects.js"
+import { audio } from "../audio.js"
 class skul extends baseSquare {
     imgp: number[]
     goneRenge: number
@@ -84,6 +85,7 @@ class skul extends baseSquare {
             XYtest(<Array<Zombie>>Enemy.list, this).forEach(e => {
                 if (e.alive && this.alive) {
                     e.HP -= this.damage
+                    audio.behit.play()
                     e.status = 2
                     e.beenKnockBack(this.x, this.y, this.knockDistance, this.direction)
                     new Effects.blast(ctx2, this.x, this.y, 10)

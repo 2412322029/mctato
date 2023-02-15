@@ -9,6 +9,7 @@ import { onPressKey } from "../world"
 import { skul } from "./catapult"
 import { frame, onrun } from "../game"
 import { Wall } from "./wall"
+import { audio } from "../audio"
 class player extends baseSquare {
     HP: number
     MP: number
@@ -233,24 +234,28 @@ class player extends baseSquare {
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedx = weapon.speed
+                audio.bui.play()
                 player.shootingList.push(s)
             } else if (onPressKey.has("arrowleft")) {
                 var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedx = -weapon.speed
+                audio.bui.play()
                 player.shootingList.push(s)
             } else if (onPressKey.has("arrowup")) {
                 var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedy = -weapon.speed
+                audio.bui.play()
                 player.shootingList.push(s)
             } else if (onPressKey.has("arrowdown")) {
                 var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
                 s.speedy = weapon.speed
+                audio.bui.play()
                 player.shootingList.push(s)
             }
         }, player.ShootInterval / weapon.modify)

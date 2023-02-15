@@ -3,6 +3,7 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue"
+import $ from "jquery"
 import { imgload } from '../core/imgloader'
 // import "../core/world"
 // import "../core/game"
@@ -35,10 +36,7 @@ imgload.init()
 animloop()
 
 onMounted(() => {
-
-    // var backg = document.getElementById('backg') as HTMLCanvasElement;
-    // var ctx2 = backg.getContext('2d') as CanvasRenderingContext2D;
-    // ctx2.drawImage(imgload.bg, 0, 0, 2000, 1125, 0, 0, 2000, 1125)
+    $("#backg").attr("src",imgload.bg.src);
 })
 
 
