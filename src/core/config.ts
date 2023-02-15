@@ -5,7 +5,8 @@ const config = {
     showdebug: false,
     showHitBox: false,//显示碰撞箱
     showGuardingCircle: false,//显示警戒圈
-    showNameAbove:false //显示名字
+    showNameAbove:false, //显示名字
+    showLink:true //显示连线
 }
 
 export { config }

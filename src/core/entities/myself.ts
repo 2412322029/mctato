@@ -2,7 +2,7 @@
  * 玩家
  */
 import { baseSquare } from "./base"
-import { XYtest } from "../math"
+import { XYtest, adsorbent } from "../math"
 import { config } from "../config"
 import { Enemy } from "./enemy"
 import { onPressKey, player1 } from "../world"
@@ -66,6 +66,9 @@ class player extends baseSquare {
     static ShootspeedLose = 0.6 //弹幕初速度损失（带有n%的玩家速度）
     static invincibleTime = 1000 //无敌
     static isInvincible = false //处于无敌状态
+
+    static adsorbentPosition = 300 //吸附距离
+    static adsorbentSpeed = 15 //吸附速度
     /**
     * 同时绘制名字
     * @returns self
@@ -333,7 +336,7 @@ class player extends baseSquare {
                 })
             }
             //检测可拾取物品
-            XYtest(items.list, this).forEach((i: any, index) => {
+            adsorbent(items.list, this, 50).forEach((i: any, index) => {
                 items.list.splice(index, 1)
                 i.give(player1)
                 audio.get.play()

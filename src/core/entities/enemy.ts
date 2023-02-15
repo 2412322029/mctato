@@ -252,6 +252,9 @@ class Enemy {
             }
 
         });
+        if (Enemy.list.length==0) {
+            Enemy.init()
+        }
     }
 }
 

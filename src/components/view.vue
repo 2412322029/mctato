@@ -9,7 +9,7 @@ import { imgload } from '../core/imgloader'
 // import "../core/game"
 import { config } from "../core/config"
 import { canvas } from '../core/world'
-import { canvas2, Effects, ctx2 } from "../core/effects"
+import {  Effects } from "../core/effects"
 import { onrun, animloop } from '../core/game'
 
 import * as dat from "dat.gui";
@@ -18,8 +18,6 @@ const gui = new dat.GUI({closed:true});
 gui.add(config, "zoomRatio", 0.3, 1.5).onChange((value: number) => {
     var c = <HTMLCanvasElement>canvas;
     c.style.transform = `scale(${value})`;
-    var c2 = <HTMLCanvasElement>canvas2;
-    c2.style.transform = `scale(${value})`;
     var b = <HTMLElement>document.getElementById("backg");
     b.style.transform = `scale(${value})`
 })
@@ -29,6 +27,7 @@ gui.add(config, "showHitBox")
 gui.add(config, "showGuardingCircle")
 gui.add(config, "showdebug")
 gui.add(config, "showNameAbove")
+gui.add(config, "showLink")
 
 gui.add(onrun, "c").name("开始").onChange((value: boolean) => {
     animloop()

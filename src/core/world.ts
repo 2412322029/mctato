@@ -11,6 +11,7 @@ import { showDebug } from "./game";
 import $ from 'jquery'
 import { Wall } from "./entities/wall";
 import { items } from "./entities/Items";
+import { Effects } from "./effects";
 //对象创建
 
 const player1 = new player(ctx, 150, 150)
@@ -38,6 +39,7 @@ function render() {
     Wall.drawall()
     Enemy.movement();
     items.loop()
+    Effects.loop()
     //键盘按键触发事件,多按键放在单按键前面 ，控制按键放最前
     {
         player1.shoot(skul)//人物行为切换

@@ -22,7 +22,8 @@ const anger = new Howl({
     src: [angerurl]
 });
 const get = new Howl({
-    src: [geturl]
+    src: [geturl],
+    volume:0.5
 });
 const noshoot = new Howl({
     src: [noshooturl]

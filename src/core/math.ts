@@ -57,6 +57,15 @@ function P2Pdistance(x1: number, y1: number, x2: number, y2: number) {
     return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 }
 
+function adsorbent<T extends baseSquare>(objlist: Array<T>, obj: baseSquare, d: number = 100): Array<T> {
+    var filterObjlist: Array<T> = []
+    objlist.forEach(e => {
+        if (P2Pdistance(e.x, e.y, obj.x, obj.y) <= d) {
+            filterObjlist.push(e)
+        }
+    });
+    return filterObjlist
+}
 
 
-export { Xtest, Ytest, XYtest, YXtest, P2Pdistance }
+export { Xtest, Ytest, XYtest, YXtest, P2Pdistance, adsorbent };
