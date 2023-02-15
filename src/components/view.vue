@@ -14,7 +14,7 @@ import { onrun, animloop } from '../core/game'
 
 import * as dat from "dat.gui";
 import { Howler } from "../core/audio"
-const gui = new dat.GUI();
+const gui = new dat.GUI({closed:true});
 gui.add(config, "zoomRatio", 0.3, 1.5).onChange((value: number) => {
     var c = <HTMLCanvasElement>canvas;
     c.style.transform = `scale(${value})`;

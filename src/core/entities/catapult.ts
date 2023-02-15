@@ -8,6 +8,8 @@ import { config } from "../config.js"
 import { Wall } from "./wall.js"
 import { ctx2, Effects } from "../effects.js"
 import { audio } from "../audio.js"
+import { player } from "./myself.js"
+import { player1 } from "../world.js"
 class skul extends baseSquare {
     imgp: number[]
     goneRenge: number
@@ -38,17 +40,18 @@ class skul extends baseSquare {
         this.initvx = 0 //惯性速度（带有发射者的瞬时速度）
         this.initvy = 0 //惯性速度（带有发射者的瞬时速度）
 
-        this.damage = 10 //伤害
+        this.damage = 20 //伤害
         this.alive = true
         this.direction = direction
         this.knockDistance = 20//击退距离
+        player1.MP--
     }
     /**
      * 固有属性
      */
     static names = "凋零骷髅头"
-    static speed = 40 //初始弹道速度
-    static modify = 2 //攻速倍率
+    static speed = 20 //初始弹道速度
+    static modify = 1 //攻速倍率
     static range = 1000//射程
     /**
     * 同时绘制名字

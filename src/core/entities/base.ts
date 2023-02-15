@@ -74,8 +74,8 @@ class baseSquare extends Position {
     draw() {
         if (!this.isOutOfRange()) {
             this.ctx.fillStyle = this.color as string;
-            this.ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2,
-                this.w, this.h);
+            this.ctx.fillRect(Math.floor(this.x - this.w / 2), Math.floor(this.y - this.h / 2),
+                Math.floor(this.w), Math.floor(this.h));
         }
         return this
     }
@@ -88,7 +88,7 @@ class baseSquare extends Position {
         //第几排，第几列
         if (!this.isOutOfRange()) {
             this.ctx.drawImage(this.img, position[0] * 100, position[1] * 100, 100, 100,
-                this.x - this.w / 2, this.y - this.h / 2, sizex, sizey
+                Math.floor(this.x - this.w / 2), Math.floor(this.y - this.h / 2), sizex, sizey
             )
         }
         return this

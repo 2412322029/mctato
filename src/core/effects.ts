@@ -25,6 +25,7 @@ class blast {
             r++
             this.ctx.clearRect(this.x - r, this.y - r, 2 * r, 2 * r);
         }, this.t);
+       
     }
 }
 class damText {
@@ -42,7 +43,7 @@ class damText {
         this.darw()
     }
     darw() {
-        var fontSize = 20
+        var fontSize = 10
         this.ctx.font = fontSize * 2 + "px magenta";
         this.ctx.fillStyle = "red"
         this.ctx.fillText("-" + this.text, this.x, this.y);

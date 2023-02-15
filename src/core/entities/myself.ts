@@ -5,11 +5,12 @@ import { baseSquare } from "./base"
 import { XYtest } from "../math"
 import { config } from "../config"
 import { Enemy } from "./enemy"
-import { onPressKey } from "../world"
+import { onPressKey, player1 } from "../world"
 import { skul } from "./catapult"
 import { frame, onrun } from "../game"
 import { Wall } from "./wall"
 import { audio } from "../audio"
+import { items } from "./Items"
 class player extends baseSquare {
     HP: number
     MP: number
@@ -77,7 +78,7 @@ class player extends baseSquare {
             super.drawImg(player.imgflash)
             this.showName(player.names)
             this.beenHit()
-            this.checkHP()
+            this.checkHPMP()
             this.showRealTimeHP()
             this.showRealTimeMP()
             return this
@@ -92,7 +93,7 @@ class player extends baseSquare {
 
             super.showName(player.names)
             this.beenHit()
-            this.checkHP()
+            this.checkHPMP()
             this.showRealTimeHP()
             this.showRealTimeMP()
             this.speedUp()
@@ -228,49 +229,63 @@ class player extends baseSquare {
      * 使用弹幕武器射击
      */
     shoot(weapon: any) {//武器
-        player.throttle(() => {
-            if (onPressKey.has("arrowright")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedx = weapon.speed
-                audio.bui.play()
-                player.shootingList.push(s)
-            } else if (onPressKey.has("arrowleft")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedx = -weapon.speed
-                audio.bui.play()
-                player.shootingList.push(s)
-            } else if (onPressKey.has("arrowup")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedy = -weapon.speed
-                audio.bui.play()
-                player.shootingList.push(s)
-            } else if (onPressKey.has("arrowdown")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedy = weapon.speed
-                audio.bui.play()
-                player.shootingList.push(s)
-            }
-        }, player.ShootInterval / weapon.modify)
-
-        if (player.shootingList.length >= player.Maxshot) {
-            player.shootingList.shift()
+        const dosome = () => {
+            audio.bui.play()
         }
-        player.shootingList.forEach(sk => {
-            if (sk.goneRenge > skul.range) {
-                sk.alive = false
-            } else {
-                sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
-            }
-        });
+        if (this.MP > 0) {
+            player.throttle(() => {
+                if (onPressKey.has("arrowright")) {
+                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
+                    s.initvx = this.vx * player.ShootspeedLose
+                    s.initvy = this.vy * player.ShootspeedLose
+                    s.speedx = weapon.speed
+                    dosome()
+                    player.shootingList.push(s)
+                } else if (onPressKey.has("arrowleft")) {
+                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
+                    s.initvx = this.vx * player.ShootspeedLose
+                    s.initvy = this.vy * player.ShootspeedLose
+                    s.speedx = -weapon.speed
+                    dosome()
+                    player.shootingList.push(s)
+                } else if (onPressKey.has("arrowup")) {
+                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
+                    s.initvx = this.vx * player.ShootspeedLose
+                    s.initvy = this.vy * player.ShootspeedLose
+                    s.speedy = -weapon.speed
+                    dosome()
+                    player.shootingList.push(s)
+                } else if (onPressKey.has("arrowdown")) {
+                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
+                    s.initvx = this.vx * player.ShootspeedLose
+                    s.initvy = this.vy * player.ShootspeedLose
+                    s.speedy = weapon.speed
+                    dosome()
+                    player.shootingList.push(s)
+                }
+            }, player.ShootInterval / weapon.modify)
 
+            if (player.shootingList.length >= player.Maxshot) {
+                player.shootingList.shift()
+            }
+            player.shootingList.forEach(sk => {
+                if (sk.goneRenge > skul.range) {
+                    sk.alive = false
+                } else {
+                    sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
+                }
+            });
+        } else {
+            if (onPressKey.has("arrowright") ||
+                onPressKey.has("arrowleft") ||
+                onPressKey.has("arrowup") ||
+                onPressKey.has("arrowdown")) {
+                player.throttle(() => {
+                    audio.noshoot.play()
+                }, 1000)
+
+            }
+        }
     }
     // 函数节流（固定时间内无论触发几次，仅执行一次）
     static throttle(func: Function, interval: number) {
@@ -286,12 +301,17 @@ class player extends baseSquare {
     /**
      * 检查血量并且纠正,判断死活
      */
-    checkHP() {
+    checkHPMP() {
         if (this.HP <= 0) {
             this.alive = false
             this.HP = 0
         } else if (this.HP >= player.MaxHP) {
             this.HP = player.MaxHP
+        }
+        if (this.MP < 0) {
+            this.MP = 0
+        } else if (this.MP > player.MaxMP) {
+            this.MP = player.MaxMP
         }
     }
     /**
@@ -312,13 +332,18 @@ class player extends baseSquare {
                     }
                 })
             }
+            //检测可拾取物品
+            XYtest(items.list, this).forEach((i: any, index) => {
+                items.list.splice(index, 1)
+                i.give(player1)
+                audio.get.play()
+            })
+            XYtest(Wall.walllist, this).forEach(e => {//检测墙体
 
-            XYtest(Wall.walllist, this).forEach(e => {
-                
 
                 if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
                     if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
-                        this.x  = e.x + e.w / 2 + this.w / 2 + 1
+                        this.x = e.x + e.w / 2 + this.w / 2 + 1
                         return
                     }
                     if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
@@ -332,12 +357,10 @@ class player extends baseSquare {
                         return
                     }
                     if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
-                        this.y  = e.y - e.h / 2 - this.h / 2 - 1
+                        this.y = e.y - e.h / 2 - this.h / 2 - 1
                         return
                     }
                 }
-
-
 
             })
         };

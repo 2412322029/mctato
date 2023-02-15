@@ -10,6 +10,7 @@ import { config } from "./config"
 import { showDebug } from "./game";
 import $ from 'jquery'
 import { Wall } from "./entities/wall";
+import { items } from "./entities/Items";
 //对象创建
 
 const player1 = new player(ctx, 150, 150)
@@ -36,7 +37,7 @@ function render() {
     ctx.clearRect(0, 0, 2000, 2000);//清除上一帧画面
     Wall.drawall()
     Enemy.movement();
-    
+    items.loop()
     //键盘按键触发事件,多按键放在单按键前面 ，控制按键放最前
     {
         player1.shoot(skul)//人物行为切换

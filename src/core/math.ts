@@ -6,7 +6,7 @@ import { baseSquare } from "./entities/base";
  * @param {Object} obj 
  * @returns {Array} 筛选后的对象列表
  */
-function Xtest<T extends baseSquare,K extends baseSquare>(objlist: Array<T>, obj: K): Array<T> {
+function Xtest<T extends baseSquare>(objlist: Array<T>, obj: baseSquare): Array<T> {
     var filterObjlist: Array<T> = []
     objlist.forEach(e => {
         if (Math.abs(e.x - obj.x) <= (e.w + obj.w) / 2) {

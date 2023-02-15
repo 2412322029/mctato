@@ -9,6 +9,7 @@ import { ctx } from "../world"
 import { config } from "../config"
 import { Wall } from "./wall"
 import { audio } from "../audio"
+import { items } from "./Items"
 class WitherSkeleton extends baseSquare {
     imgp: [number, number]
     /**
@@ -224,6 +225,11 @@ class Zombie extends baseSquare {
             this.ctx.strokeStyle = 'black';
         }
     }
+    dei() {
+        audio.die.play()
+        items.list.push(new items.heal(this.x + Math.random() * 20, this.y - 25))
+        items.list.push(new items.supply(this.x - Math.random() * 20, this.y + 25))
+    }
 }
 
 class Enemy {
@@ -241,7 +247,7 @@ class Enemy {
             if (e.alive) {
                 e.draw()
             } else {
-                audio.die.play()
+                e.dei()
                 Enemy.list.splice(index, 1)
             }
 
