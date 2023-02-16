@@ -6,7 +6,7 @@ import { XYtest } from "../math.js"
 import { Enemy, Zombie } from "./enemy.js"
 import { config } from "../config.js"
 import { Wall } from "./wall.js"
-import {  Effects } from "../effects.js"
+import { Effects } from "../effects.js"
 import { audio } from "../audio.js"
 import { player } from "./myself.js"
 import { player1 } from "../world.js"
@@ -87,12 +87,7 @@ class skul extends baseSquare {
         if (this.alive) {
             XYtest(<Array<Zombie>>Enemy.list, this).forEach(e => {
                 if (e.alive && this.alive) {
-                    e.HP -= this.damage
-                    audio.behit.play()
-                    e.status = 2
-                    e.beenKnockBack(this.x, this.y, this.knockDistance, this.direction)
-                    Effects.list.push(new Effects.blast(this.ctx, this.x, this.y))
-                    Effects.list.push(new Effects.damText(this.ctx, e.x, e.y, "- " + this.damage, 1000))
+                    e.hurt(this.damage,this.knockDistance, this.direction)
                     this.alive = false
                 }
             })

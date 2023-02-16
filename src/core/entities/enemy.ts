@@ -3,7 +3,7 @@
  * 凋零骷髅
  */
 import { baseSquare } from "./base"
-import { P2Pdistance, XYtest } from "../math"
+import { dijkstra, lineIntersect, P2Pdistance, XYtest } from "../math"
 import { canvas, player1 } from "../world"
 import { ctx } from "../world"
 import { config } from "../config"
@@ -61,6 +61,7 @@ class Zombie extends baseSquare {
     randomPosition: Array<number>
     randomCount: number
     wanderRange: number[]
+    angreTimer: number
     /**
      * 
      * @param {*} ctx 
@@ -84,6 +85,7 @@ class Zombie extends baseSquare {
         this.wanderRange = [200, 100]//游荡范围矩形
         this.randomPosition = [0, 0] //随机产生的目标点
         this.randomCount = 0 //随机次数
+        this.angreTimer = 0
     }
     /**
      * 固有属性
@@ -96,6 +98,7 @@ class Zombie extends baseSquare {
     static speed = 5
     static guardingRadius = 300 //警戒半径
     static chasingDistance = 450 //跟随半径
+    static angreTime = 50 //仇恨时间s
     /**
     * 同时绘制名字
     * @returns self
@@ -211,29 +214,49 @@ class Zombie extends baseSquare {
      * 警卫圈
      */
     guardingCircle() {
-        // 玩家进入警卫圈 怪物 游荡->跟随
-        if (this.status != 2 && P2Pdistance(player1.x, player1.y, this.x, this.y) <= Zombie.guardingRadius) {
+        // 玩家进入警卫圈  游荡/回家->跟随
+        if ((this.status == 0 || this.status == 3) && P2Pdistance(player1.x, player1.y, this.x, this.y)
+            <= Zombie.guardingRadius) {
             this.status = 1//跟随
         }
-        // 玩家逃出追击圈 怪物 跟随->游荡
-        if (this.status == 1 && P2Pdistance(player1.x, player1.y, this.x, this.y) >= Zombie.chasingDistance) {
-            this.status = 0 //游荡
+        // 玩家逃出追击圈  跟随->回家
+        if (this.status == 1 && P2Pdistance(player1.x, player1.y, this.x, this.y)
+            >= Zombie.chasingDistance) {
+            this.status = 3 //回家
+        }
+        // 仇恨->回家
+        if (this.status == 2 && this.angreTimer == Zombie.angreTime) {
+            this.status = 3//脱离仇恨 回家
+            this.alanger = false
+            this.imgp = Zombie.imgnomal
+        }
+        //接近出生点时 回家->游荡
+        if (this.status == 3 && P2Pdistance(this.x, this.y, this.staticPosition[0],
+            this.staticPosition[1]) < Math.sqrt(this.wanderRange[0] ** 2 + this.wanderRange[1] ** 2)) {
+            this.status = 0
         }
         switch (this.status) {
-            case 0:
+            case 0://游荡
                 this.wander()
-                //按照预定轨迹游荡
                 break;
-            case 1:
+            case 1://跟随
                 super.moveTo(player1.x, player1.y, Zombie.speed)
                 if (config.showLink) { Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "blue") }
                 break;
-            case 2:
+            case 2://仇恨  //寻路
                 if (!this.alanger) { audio.anger.play() }
-                this.alanger = true
+                this.alanger = true// 发声音flag
+                if (frame.c == 0) { this.angreTimer++ }//仇恨计时
                 this.imgp = Zombie.imgrage
-                super.moveTo(player1.x, player1.y, Zombie.speed * 2)
-                if (config.showLink) { Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "red") }
+                // super.moveTo(player1.x, player1.y, Zombie.speed * 1.5)
+                this.findWay(player1)
+                // if (config.showLink) { Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "red") }
+                break;
+            case 3://回家 //寻路
+                var x = this.staticPosition[0]
+                var y = this.staticPosition[1]
+                this.moveTo(x, y, 1)
+                Effects.linkto({ x, y }, this, 0, "green")
                 break;
             default:
                 break;
@@ -245,7 +268,7 @@ class Zombie extends baseSquare {
             this.ctx.stroke();
 
             this.ctx.beginPath();//追击圈
-            this.ctx.strokeStyle = 'orange';
+            this.ctx.strokeStyle = 'blue';
             this.ctx.arc(this.x, this.y, Zombie.chasingDistance, 0, Math.PI * 2);
             this.ctx.stroke();
             this.ctx.strokeStyle = 'black';
@@ -257,7 +280,70 @@ class Zombie extends baseSquare {
                 this.staticPosition[1] - this.wanderRange[1],
                 this.wanderRange[0] * 2, 2 * this.wanderRange[1]);
             this.ctx.fill();
+
+            // this.ctx.font = "20px none"//仇恨倒计时 
+            // this.ctx.fillStyle = "black"
+            // this.ctx.fillText("仇恨计时" + this.angreTimer + "/" + Zombie.angreTime, this.x + this.w / 1.5, this.y)
         }
+    }
+    findWay(obj: any) {//寻路 到达obj
+        var canreach = 0
+        Wall.walllist.forEach((e: any) => {
+            if (!lineIntersect(e.p, [obj.x, obj.y, this.x, this.y])) {
+                canreach += 1
+            }
+        })
+        if (Wall.walllist.length == canreach) {
+            // super.moveTo(player1.x, player1.y, Zombie.speed)
+            Effects.linkto(player1, this, 0)
+            return
+        }
+        var A: any = Wall.reachableNode(this)//怪物可达节点
+        var B: any = Wall.reachableNode(obj)//玩家可达节点
+        var min = 10000
+        var path: any = []
+        // console.log(A, B);
+
+        for (let i = 0; i < A.length; i++) {
+            for (let j = 0; j < B.length; j++) {
+                var result = dijkstra(Wall.adjMatrix, A[i].key, B[j].key)
+                var disnode = result[1]//两个节点距离
+                var alldist = disnode + A[i].distence + B[j].distence
+                if (alldist < min) {
+                    min = alldist
+                    path = result[0]
+                }
+            }
+        }
+        console.log(path, min);
+
+        for (let i = 0; i < path.length - 1; i++) {
+            Effects.linkto({
+                x: Wall.nodeCoords[path[i]][0],
+                y: Wall.nodeCoords[path[i]][1]
+            }, {
+                x: Wall.nodeCoords[path[i + 1]][0],
+                y: Wall.nodeCoords[path[i + 1]][1]
+            }, 0)
+        }
+        Effects.linkto(this, {
+            x: Wall.nodeCoords[path[0]][0],
+            y: Wall.nodeCoords[path[0]][1]
+        }, 0)
+        Effects.linkto(player1, {
+            x: Wall.nodeCoords[path[path.length - 1]][0],
+            y: Wall.nodeCoords[path[path.length - 1]][1]
+        }, 0)
+
+    }
+    hurt(damage: number, knockDistance?: number, direction?: "left" | "right" | "up" | "down") {//伤害值，击退距离
+        this.HP -= damage
+        audio.behit.play()
+        this.status = 2 //产生仇恨
+        this.angreTimer = 0 //刷新仇恨计时
+        this.beenKnockBack(this.x, this.y, knockDistance, direction)//击退
+        Effects.list.push(new Effects.blast(this.ctx, this.x, this.y))
+        Effects.list.push(new Effects.damText(this.ctx, this.x, this.y, "- " + damage, 1000))
     }
     dei() {
         audio.die.play()
