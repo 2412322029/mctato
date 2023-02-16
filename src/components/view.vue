@@ -15,19 +15,20 @@ import { onrun, animloop } from '../core/game'
 import * as dat from "dat.gui";
 import { Howler } from "../core/audio"
 const gui = new dat.GUI({closed:true});
-gui.add(config, "zoomRatio", 0.3, 1.5).onChange((value: number) => {
+gui.add(config, "zoomRatio", 0.3, 1.5).name("缩放比").onChange((value: number) => {
     var c = <HTMLCanvasElement>canvas;
     c.style.transform = `scale(${value})`;
     var b = <HTMLElement>document.getElementById("backg");
     b.style.transform = `scale(${value})`
 })
-gui.add(config, "displayPosition")
-gui.add(config, "showHPMPtext")
-gui.add(config, "showHitBox")
-gui.add(config, "showGuardingCircle")
-gui.add(config, "showdebug")
-gui.add(config, "showNameAbove")
-gui.add(config, "showLink")
+gui.add(config, "showdebug").name("调试信息")
+gui.add(config, "displayPosition").name("显示坐标")
+gui.add(config, "showNameAbove").name("显示名字")
+gui.add(config, "showHPMPtext").name("显示血条文字")
+gui.add(config, "showHitBox").name("显示碰撞箱")
+gui.add(config, "showGuardingCircle").name("显示警戒圈")
+gui.add(config, "showLink").name("显示路径连线")
+gui.add(config, "showwanderRange").name("显示游荡区域")
 
 gui.add(onrun, "c").name("开始").onChange((value: boolean) => {
     animloop()

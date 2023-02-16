@@ -10,6 +10,8 @@ import { config } from "../config"
 import { Wall } from "./wall"
 import { audio } from "../audio"
 import { items } from "./Items"
+import { frame } from "../game"
+import { Effects } from "../effects"
 class WitherSkeleton extends baseSquare {
     imgp: [number, number]
     /**
@@ -55,6 +57,10 @@ class Zombie extends baseSquare {
     status: number
     imgp: number[]
     alanger: boolean
+    staticPosition: Array<number>
+    randomPosition: Array<number>
+    randomCount: number
+    wanderRange: number[]
     /**
      * 
      * @param {*} ctx 
@@ -74,6 +80,10 @@ class Zombie extends baseSquare {
 
         this.imgp = Zombie.imgnomal//现在图像位置
         this.alanger = false //已经发出生气声音
+        this.staticPosition = JSON.parse(JSON.stringify([this.x, this.y])) //生成时的固定位置
+        this.wanderRange = [200, 100]//游荡范围矩形
+        this.randomPosition = [0, 0] //随机产生的目标点
+        this.randomCount = 0 //随机次数
     }
     /**
      * 固有属性
@@ -180,6 +190,23 @@ class Zombie extends baseSquare {
             this.HP = Zombie.MaxHP
         }
     }
+    wander() {
+        if (frame.c == 0) {
+            setTimeout(() => {
+                this.randomCount++
+                if (this.randomCount == 1) {
+                    this.randomPosition[0] = 2 * this.wanderRange[0] * Math.random() - this.wanderRange[0]
+                    this.randomPosition[1] = 2 * this.wanderRange[1] * Math.random() - this.wanderRange[1]
+                    this.randomCount = 0
+                }
+            }, 2000 * Math.random());//错开运动
+        }
+        var x = this.staticPosition[0] + this.randomPosition[0]
+        var y = this.staticPosition[1] + this.randomPosition[1]
+        this.moveTo(x, y, 1)
+        Effects.linkto({ x, y }, this, 0, "yellow")
+
+    }
     /**
      * 警卫圈
      */
@@ -194,20 +221,19 @@ class Zombie extends baseSquare {
         }
         switch (this.status) {
             case 0:
-                // console.log(0);
+                this.wander()
                 //按照预定轨迹游荡
                 break;
             case 1:
-                // console.log(1);
                 super.moveTo(player1.x, player1.y, Zombie.speed)
+                if (config.showLink) { Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "blue") }
                 break;
             case 2:
                 if (!this.alanger) { audio.anger.play() }
                 this.alanger = true
                 this.imgp = Zombie.imgrage
-                // console.log(2);
                 super.moveTo(player1.x, player1.y, Zombie.speed * 2)
-
+                if (config.showLink) { Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "red") }
                 break;
             default:
                 break;
@@ -224,6 +250,14 @@ class Zombie extends baseSquare {
             this.ctx.stroke();
             this.ctx.strokeStyle = 'black';
         }
+        if (config.showwanderRange) {
+            this.ctx.beginPath();//游荡圈
+            this.ctx.fillStyle = 'rgba(200,200,100,0.2)';
+            this.ctx.rect(this.staticPosition[0] - this.wanderRange[0],
+                this.staticPosition[1] - this.wanderRange[1],
+                this.wanderRange[0] * 2, 2 * this.wanderRange[1]);
+            this.ctx.fill();
+        }
     }
     dei() {
         audio.die.play()
@@ -236,8 +270,8 @@ class Enemy {
     static list: Zombie[] = []
     static init() {
         for (let i = 0; i < 5; i++) {
-            let d: Zombie = new Zombie(ctx, 500 + Math.floor(Math.random() * (canvas.width - 300)),
-                500 + Math.floor(Math.random() * (canvas.height - 300)))
+            let d: Zombie = new Zombie(ctx, 100 + Math.floor(Math.random() * (canvas.width - 300)),
+                100 + Math.floor(Math.random() * (canvas.height - 300)))
             Enemy.list.push(d)
         }
 
@@ -252,7 +286,7 @@ class Enemy {
             }
 
         });
-        if (Enemy.list.length==0) {
+        if (Enemy.list.length == 0) {
             Enemy.init()
         }
     }

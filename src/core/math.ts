@@ -54,7 +54,7 @@ function YXtest<T extends baseSquare>(objlist: Array<T>, obj: baseSquare): Array
  * @returns 
  */
 function P2Pdistance(x1: number, y1: number, x2: number, y2: number) {
-    return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+    return Math.floor(Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2))
 }
 
 function adsorbent<T extends baseSquare>(objlist: Array<T>, obj: baseSquare, d: number = 100): Array<T> {

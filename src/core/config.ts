@@ -6,7 +6,8 @@ const config = {
     showHitBox: false,//显示碰撞箱
     showGuardingCircle: false,//显示警戒圈
     showNameAbove:false, //显示名字
-    showLink:true //显示连线
+    showLink:true, //显示路径连线
+    showwanderRange:true //显示游荡区域
 }
 
 export { config }

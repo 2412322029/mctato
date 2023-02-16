@@ -78,17 +78,20 @@ class poisonGas {
 
 }
 
-function linkto<T extends baseSquare, K extends baseSquare>(ob1: T, ob2: K, speed = 15): void {
-    ob2.moveTo(ob1.x, ob1.y, speed)
+function linkto<T extends baseSquare, K extends baseSquare>(ob1: T | any, ob2: K | any, speed = 15, color = "blue"): void {
+    if (speed != 0) {
+        ob2.moveTo(ob1.x, ob1.y, speed)
+    }
     if (config.showLink) {
-        ctx.beginPath()
         ctx.lineWidth = 5
+        ctx.beginPath()
         ctx.moveTo(ob1.x, ob1.y)
         ctx.lineTo(ob2.x, ob2.y)
-        ctx.lineWidth = 1
-        ctx.strokeStyle = "blue"
+        ctx.strokeStyle = color
         ctx.closePath()
         ctx.stroke()
+        ctx.lineWidth = 1
+        ctx.strokeStyle = "black"
     }
 }
 

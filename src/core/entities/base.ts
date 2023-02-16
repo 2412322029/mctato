@@ -112,11 +112,12 @@ class baseSquare extends Position {
      */
     showBox(w: number, h: number) {
         if (config.showHitBox) {
+            this.ctx.strokeStyle = "blcak"
             this.ctx.beginPath();
             this.ctx.rect((this.x - this.w / 2) - w / 2, (this.y - this.h / 2) - h / 2,
                 this.w + w, this.h + h);
-            this.ctx.stroke()
             this.ctx.closePath()
+            this.ctx.stroke()
         }
     }
     /**
