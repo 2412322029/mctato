@@ -9,7 +9,7 @@ import { onPressKey, player1 } from "../world"
 import { skul } from "./catapult"
 import { frame, onrun } from "../game"
 import { Wall } from "./wall"
-import { audio } from "../audio"
+import { audio } from "../utils/audio"
 import { items } from "./Items"
 class player extends baseSquare {
     HP: number
@@ -228,43 +228,61 @@ class player extends baseSquare {
 
         this.draw()
     }
+    //移动端
+    shootAllDirections(weapon: any, vx: number, vy: number) {
+        if (this.MP > 0) {
+            var s = new weapon(this.ctx, this.x, this.y, 20, 20)
+            s.initvx = this.vx * player.ShootspeedLose
+            s.initvy = this.vy * player.ShootspeedLose
+            s.speedx = vx
+            s.speedy = vy
+            audio.bui.play()
+            player.shootingList.push(s)
+            console.log(1);
+        } else {//没蓝提醒
+            player.throttle(() => {
+                audio.noshoot.play()
+            }, 1000)
+        }
+        if (player.shootingList.length >= player.Maxshot) {
+            player.shootingList.shift()
+        }
+        player.shootingList.forEach(sk => {
+            if (sk.goneRenge > skul.range) {
+                sk.alive = false
+            } else {
+                sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
+            }
+        });
+    }
     /**
      * 使用弹幕武器射击
      */
     shoot(weapon: any) {//武器
-        const dosome = () => {
+        const dosome = (s: any) => {
+            s.initvx = this.vx * player.ShootspeedLose
+            s.initvy = this.vy * player.ShootspeedLose
+            player.shootingList.push(s)
             audio.bui.play()
         }
         if (this.MP > 0) {
             player.throttle(() => {
                 if (onPressKey.has("arrowright")) {
                     var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
-                    s.initvx = this.vx * player.ShootspeedLose
-                    s.initvy = this.vy * player.ShootspeedLose
                     s.speedx = weapon.speed
-                    dosome()
-                    player.shootingList.push(s)
+                    dosome(s)
                 } else if (onPressKey.has("arrowleft")) {
                     var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
-                    s.initvx = this.vx * player.ShootspeedLose
-                    s.initvy = this.vy * player.ShootspeedLose
                     s.speedx = -weapon.speed
-                    dosome()
-                    player.shootingList.push(s)
+                    dosome(s)
                 } else if (onPressKey.has("arrowup")) {
                     var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
-                    s.initvx = this.vx * player.ShootspeedLose
-                    s.initvy = this.vy * player.ShootspeedLose
                     s.speedy = -weapon.speed
-                    dosome()
-                    player.shootingList.push(s)
+                    dosome(s)
                 } else if (onPressKey.has("arrowdown")) {
                     var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
-                    s.initvx = this.vx * player.ShootspeedLose
-                    s.initvy = this.vy * player.ShootspeedLose
                     s.speedy = weapon.speed
-                    dosome()
-                    player.shootingList.push(s)
+                    dosome(s)
                 }
             }, player.ShootInterval / weapon.modify)
 
@@ -278,7 +296,7 @@ class player extends baseSquare {
                     sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
                 }
             });
-        } else {
+        } else {//按了上|下|左|右
             if (onPressKey.has("arrowright") ||
                 onPressKey.has("arrowleft") ||
                 onPressKey.has("arrowup") ||

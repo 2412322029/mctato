@@ -1,5 +1,5 @@
-import bgurl from '../assets/bg.png'
-import spiriturl from "../assets/spirit.png"
+import bgurl from '../../assets/bg.png'
+import spiriturl from "../../assets/spirit.png"
 
 const imgload = {
     bg: new Image(),

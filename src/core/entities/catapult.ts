@@ -7,7 +7,7 @@ import { Enemy, Zombie } from "./enemy.js"
 import { config } from "../config.js"
 import { Wall } from "./wall.js"
 import { Effects } from "../effects.js"
-import { audio } from "../audio.js"
+import { audio } from "../utils/audio.js"
 import { player } from "./myself.js"
 import { player1 } from "../world.js"
 class skul extends baseSquare {

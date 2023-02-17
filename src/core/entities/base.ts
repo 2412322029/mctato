@@ -1,6 +1,6 @@
 import { canvas } from "../world"
 import { config } from "../config"
-import { imgload } from "../imgloader"
+import { imgload } from "../utils/imgloader"
 /**
  * 位置基类
  */

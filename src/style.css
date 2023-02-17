@@ -25,6 +25,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow: hidden;
+  justify-content: center
 }
 
 
@@ -75,7 +76,7 @@ button:focus-visible {
   display: block;
   border: rgb(0, 0, 0) solid 1px;
 
-  transform-origin: 0 0;
+  transform-origin: 50% 0;
 }
 
 #canvas,#canvas2{
