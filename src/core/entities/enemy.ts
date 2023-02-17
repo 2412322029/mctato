@@ -62,6 +62,7 @@ class Zombie extends baseSquare {
     randomCount: number
     wanderRange: number[]
     angreTimer: number
+    path: Array<number>
     /**
      * 
      * @param {*} ctx 
@@ -86,6 +87,7 @@ class Zombie extends baseSquare {
         this.randomPosition = [0, 0] //随机产生的目标点
         this.randomCount = 0 //随机次数
         this.angreTimer = 0
+        this.path = []
     }
     /**
      * 固有属性
@@ -248,15 +250,25 @@ class Zombie extends baseSquare {
                 this.alanger = true// 发声音flag
                 if (frame.c == 0) { this.angreTimer++ }//仇恨计时
                 this.imgp = Zombie.imgrage
-                // super.moveTo(player1.x, player1.y, Zombie.speed * 1.5)
-                this.findWay(player1)
-                // if (config.showLink) { Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "red") }
+                if (this.findWay(player1, "red") != undefined) {
+                    super.moveTo(Wall.nodeCoords[this.path[0]][0],
+                        Wall.nodeCoords[this.path[0]][1], Zombie.speed * 1.5)
+                } else {
+                    super.moveTo(player1.x, player1.y, Zombie.speed * 1.5)
+                    Effects.linkto({ x: player1.x, y: player1.y }, this, 0, "red")
+                }
                 break;
             case 3://回家 //寻路
                 var x = this.staticPosition[0]
                 var y = this.staticPosition[1]
-                this.moveTo(x, y, 1)
-                Effects.linkto({ x, y }, this, 0, "green")
+                if (this.findWay({ x: this.staticPosition[0], y: this.staticPosition[1] }
+                    , "green") != undefined) {
+                    super.moveTo(Wall.nodeCoords[this.path[0]][0],
+                        Wall.nodeCoords[this.path[0]][1], Zombie.speed)
+                } else {
+                    super.moveTo(x, y, 1)
+                    Effects.linkto({ x, y }, this, 0, "green")
+                }
                 break;
             default:
                 break;
@@ -286,7 +298,7 @@ class Zombie extends baseSquare {
             // this.ctx.fillText("仇恨计时" + this.angreTimer + "/" + Zombie.angreTime, this.x + this.w / 1.5, this.y)
         }
     }
-    findWay(obj: any) {//寻路 到达obj
+    findWay(obj: any, color = "blue") {//寻路 到达obj
         var canreach = 0
         Wall.walllist.forEach((e: any) => {
             if (!lineIntersect(e.p, [obj.x, obj.y, this.x, this.y])) {
@@ -315,7 +327,8 @@ class Zombie extends baseSquare {
                 }
             }
         }
-        console.log(path, min);
+        this.path = path
+
 
         for (let i = 0; i < path.length - 1; i++) {
             Effects.linkto({
@@ -324,16 +337,17 @@ class Zombie extends baseSquare {
             }, {
                 x: Wall.nodeCoords[path[i + 1]][0],
                 y: Wall.nodeCoords[path[i + 1]][1]
-            }, 0)
+            }, 0, color)
         }
         Effects.linkto(this, {
             x: Wall.nodeCoords[path[0]][0],
             y: Wall.nodeCoords[path[0]][1]
-        }, 0)
+        }, 0, color)
         Effects.linkto(player1, {
             x: Wall.nodeCoords[path[path.length - 1]][0],
             y: Wall.nodeCoords[path[path.length - 1]][1]
-        }, 0)
+        }, 0, color)
+        return path
 
     }
     hurt(damage: number, knockDistance?: number, direction?: "left" | "right" | "up" | "down") {//伤害值，击退距离

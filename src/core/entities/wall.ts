@@ -14,11 +14,11 @@ class Wall extends baseSquare {
         if (v) {
             this.w = 10
             this.h = L
-            this.p = [this.x, this.y + L / 2, this.x, this.y - L / 2]
+            this.p = [this.x, this.y + L / 2 + 55, this.x, this.y - L / 2 - 55]
         } else {
             this.h = 10
             this.w = L
-            this.p = [this.x - L / 2, this.y, this.x + L / 2, this.y]
+            this.p = [this.x - L / 2 - 55, this.y, this.x + L / 2 + 55, this.y]
         }
 
     }
@@ -50,7 +50,7 @@ class Wall extends baseSquare {
         2: [1400, 325],
         3: [1650, 500],
         4: [1400, 775],
-        5: [600, 850],
+        5: [600, 950],
         6: [900, 500],
     }
     //邻接表
@@ -94,7 +94,7 @@ class Wall extends baseSquare {
                 }
             })
             if (this.walllist.length == canreach) {
-                reachableNodelist.push({ key:Number(key), distence: P2Pdistance(obj.x, obj.y, node[0], node[1]) })
+                reachableNodelist.push({ key: Number(key), distence: P2Pdistance(obj.x, obj.y, node[0], node[1]) })
 
             }
 
