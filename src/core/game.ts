@@ -5,14 +5,22 @@ import { render } from './world'
 import { onPressKey } from "./world"
 import { player } from './entities/myself'
 import { Enemy } from './entities/enemy'
-var onrun ={"c":true}//是否在运行
-var fps = 100//帧率
+import { setting } from './config'
+var onrun = { "c": false }//是否在运行
+var fps = setting.fps//帧率
+
 var realTimefps = 0//实际fps
-var lastCalledTime:number //上一帧时间
+var lastCalledTime: number //上一帧时间
 var fpsInterval = 1000 / fps
 var last = new Date().getTime()
 var rafId
-var frame={c:1}
+var frame = { c: 1 }
+export function toggleRun() {
+    onrun.c = !onrun.c
+    fps = setting.fps
+    fpsInterval = 1000 / fps
+    animloop()
+}
 function animloop() {
     frame.c++
     frame.c = frame.c > fps ? 0 : frame.c
@@ -39,7 +47,7 @@ function animloop() {
 }
 // animloop();//开始
 
-function showDebug(ctx:CanvasRenderingContext2D) {
+function showDebug(ctx: CanvasRenderingContext2D) {
     var fontSize = 25
     ctx.font = fontSize + "px Arial";
     ctx.shadowColor = "black";
@@ -69,6 +77,6 @@ function showDebug(ctx:CanvasRenderingContext2D) {
 
 }
 
-export { onrun,animloop, showDebug, fps,frame}
+export { onrun, animloop, showDebug, fps, frame }
 
 

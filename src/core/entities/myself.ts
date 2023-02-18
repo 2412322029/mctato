@@ -114,8 +114,28 @@ class player extends baseSquare {
         }
 
         return this
-
-
+    }
+    static showimgdirection(direction: Direction) {
+        switch (direction) {
+            case Direction.R:
+                player.imgp = player.imgright
+                break;
+            case Direction.L:
+                player.imgp = player.imgleft
+                break;
+            case Direction.U:
+                player.imgp = player.imgup
+                break;
+            case Direction.D:
+                player.imgp = player.imgdown
+                break;
+            case Direction.C:
+                player.imgp = player.imgcenter
+                break;
+            default:
+                player.imgp = player.imgcenter
+                break;
+        }
     }
     /**
      * 显示实时血量
@@ -413,4 +433,12 @@ class player extends baseSquare {
         }
     }
 }
+enum Direction {
+    R = "right",
+    L = "left",
+    U = "up",
+    D = "down",
+    C = "center"
+}
 export { player }
+export { Direction }

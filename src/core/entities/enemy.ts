@@ -369,7 +369,7 @@ class Zombie extends baseSquare {
 class Enemy {
     static list: Zombie[] = []
     static init() {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 0; i++) {
             let d: Zombie = new Zombie(ctx, 100 + Math.floor(Math.random() * (canvas.width - 300)),
                 100 + Math.floor(Math.random() * (canvas.height - 300)))
             Enemy.list.push(d)

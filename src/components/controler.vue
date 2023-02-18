@@ -1,21 +1,26 @@
 <template>
-    <div id="phone">
+    <span style="position: fixed; font-size: 25px;z-index: 1000;" 
+    @click="$('#cover').fadeToggle({ duration: 300, });toggleRun()">暂停</span>
+    <div id="phone" v-show="phone.showcontroler">
         <div id="leftControler"></div>
         <div id="rightControler"></div>
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted, watch, reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import nipplejs from 'nipplejs';
 import { config } from '../core/config'
 import { onPressKey, playerspeedcontrol, catapultspeedcontrol } from "../core/world";
-import { player } from "../core/entities/myself";
+import { Direction, player } from "../core/entities/myself";
 import $ from 'jquery'
-import { skul } from "../core/entities/catapult";
+import { toggleRun } from "../core/game";
 
+
+const phone: any = reactive({ config })
 const showPhoneControlers = () => {
     var rightControler: nipplejs.JoystickManager = nipplejs.create({
         zone: <HTMLElement>document.getElementById('rightControler'),
+        dynamicPage: true,
         mode: 'static',
         position: { right: '15%', bottom: '20%' },
         color: '#74ecff'
@@ -33,6 +38,7 @@ const showPhoneControlers = () => {
 
     var leftControler: nipplejs.JoystickManager = nipplejs.create({
         zone: <HTMLElement>document.getElementById('leftControler'),
+        dynamicPage: true,
         mode: 'static',
         position: { left: '15%', bottom: '20%' },
         color: '#74ecff',
@@ -42,14 +48,15 @@ const showPhoneControlers = () => {
         if (config.Stick_offset_affects_speed) {
             forc = nipple.distance / 50
         }
-        console.log(forc);
-
         var vx = Math.floor(Math.cos(nipple.angle.radian) * player.moveSpeed * forc);
         var vy = -Math.floor(Math.sin(nipple.angle.radian) * player.moveSpeed * forc);
         playerspeedcontrol.set(vx, vy)
+        if(nipple.direction){player.showimgdirection(<Direction>nipple.direction.angle)}
+
     })
     leftControler.on("end", (evt, nipple) => {
         playerspeedcontrol.set(0, 0)
+        player.showimgdirection(Direction.C)
     })
 }
 const showPCcontrolers = () => {
@@ -113,6 +120,10 @@ onMounted(() => {
 
 
 </script>
-<script>
-
-</script>
+<style scoped>
+#phone {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+</style>

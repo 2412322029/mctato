@@ -6,7 +6,7 @@ var ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 import { player } from "./entities/myself"
 import { Enemy } from "./entities/enemy"
 import { skul } from "./entities/catapult"
-import { config } from "./config"
+import { config, even } from "./config"
 import { frame, showDebug } from "./game";
 
 import { Wall } from "./entities/wall";
@@ -53,7 +53,7 @@ function render() {
     }
     player1.shoot(weapon)
     player1.move(playerspeedcontrol.vx, playerspeedcontrol.vy)
-    if (!config.showcontroler
+    if (!even.showcontroler
         && !onPressKey.has("a")
         && !onPressKey.has("w")
         && !onPressKey.has("s")
