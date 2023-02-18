@@ -1,6 +1,5 @@
 <template>
-    <span style="position: fixed; font-size: 25px;z-index: 1000;" 
-    @click="$('#cover').fadeToggle({ duration: 300, });toggleRun()">暂停</span>
+    <div id="start" @click="$('#cover').fadeToggle({ duration: 300, }); toggleRun()">暂停</div>
     <div id="phone" v-show="phone.showcontroler">
         <div id="leftControler"></div>
         <div id="rightControler"></div>
@@ -51,7 +50,7 @@ const showPhoneControlers = () => {
         var vx = Math.floor(Math.cos(nipple.angle.radian) * player.moveSpeed * forc);
         var vy = -Math.floor(Math.sin(nipple.angle.radian) * player.moveSpeed * forc);
         playerspeedcontrol.set(vx, vy)
-        if(nipple.direction){player.showimgdirection(<Direction>nipple.direction.angle)}
+        if (nipple.direction) { player.showimgdirection(<Direction>nipple.direction.angle) }
 
     })
     leftControler.on("end", (evt, nipple) => {

@@ -89,6 +89,15 @@ button:focus-visible {
   height: 100%;
 }
 
+#start {
+  position: fixed;
+  right: 0px;
+  margin: 10px;
+  float: right;
+  font-size: 25px;
+  z-index: 1000;
+}
+
 img {
   user-select: none;
   cursor: no-drop;

@@ -1,6 +1,7 @@
 <template>
     <div id="cover">
-        <span style="position: fixed; font-size: 25px;" @click="start()">开始</span>
+        <div id="start" @click="start()">
+            开始</div>
         <div id="menu">
             <div id="menu_left">
                 <div v-for="name, index in tabname" @click="id = index" :class="{ active: id == index }">{{ name }}
@@ -15,6 +16,11 @@
                             全屏</button>
                         <button onclick="document.exitFullscreen();">
                             退出全屏</button>
+                        <br>
+                        操作方式：<br>
+                        移动： a w s d<br>
+                        射击： ↑ ↓ ← →<br>
+                        菜单： ESC<br>
                     </div>
                 </div>
                 <div v-show="id == 1" :name="tabname[1]">
@@ -79,7 +85,15 @@
                         底 0<input type="range" min="0" max="100" v-model="wz.R.bottom">{{ wz.R.bottom }}%
                         <button @click="wz.R.right = 15; wz.R.bottom = 20">重置</button>
                         <br>
+                        音量:0<input type="range" min="0" max="1" step="0.01" v-model="settings.volumes">{{ settings.volumes
+                        }}
+                        <br>
                         <button @click="$(gui.domElement).toggle()">打开调试面板</button>
+                        <br>
+                        <br>
+                        <button @click="Enemy.init()">怪物初始化</button>
+                        <br>
+                        <br>    
 
                     </div>
                 </div>
@@ -104,6 +118,8 @@ import { toggleRun } from "../core/game";
 import { gui } from "../core/utils/gui";
 import { player } from "../core/entities/myself";
 import { imgload } from "../core/utils/imgloader";
+import { Enemy } from "../core/entities/enemy";
+import { Howler } from "../core/utils/audio";
 
 $(document).on("keydown", (e) => {
     if (e.key == "Escape") {
@@ -117,6 +133,9 @@ function start() {
 var tabname = ["home", "背包", "人物", "设置", "关于"]
 var id = ref(0)
 var settings = reactive(setting)
+watch(settings, (e) => {
+    Howler.volume(e.volumes)
+}, { deep: true })
 
 var wz = reactive({
     L: {

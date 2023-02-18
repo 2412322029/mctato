@@ -10,12 +10,12 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 index: path.resolve(__dirname, 'index.html'),
-                about: path.resolve(__dirname, 'editer.html'),
+                // about: path.resolve(__dirname, 'editer.html'),
             },
             output: {
-                chunkFileNames: 'static/[name]-[hash].js',
-                entryFileNames: "static/[name]-[hash].js",
-                assetFileNames: "static/asset/[name]-[hash].[ext]"
+                // chunkFileNames: 'static/[name]-[hash].js',
+                // entryFileNames: "static/[name]-[hash].js",
+                // assetFileNames: "static/asset/[name]-[hash].[ext]"
             }
         },
     }

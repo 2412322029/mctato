@@ -104,6 +104,7 @@ class player extends baseSquare {
             onrun.c = false
             if (confirm("死了,复活or重开")) {
                 this.HP = player.MaxHP
+                this.MP =player.MaxMP
                 this.alive = true
                 onPressKey.clear()
                 onrun.c = true
