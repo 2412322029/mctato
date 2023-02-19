@@ -20,6 +20,7 @@
                         操作方式：<br>
                         移动： a w s d<br>
                         射击： ↑ ↓ ← →<br>
+                        加速： shift<br>
                         菜单： ESC<br>
                     </div>
                 </div>
@@ -93,7 +94,7 @@
                         <br>
                         <button @click="Enemy.init()">怪物初始化</button>
                         <br>
-                        <br>    
+                        <br>
 
                     </div>
                 </div>
@@ -169,22 +170,22 @@ watch(wz, (e) => {
 
 #menu {
     display: flex;
-    margin: 2em;
-    margin-top: 40px;
+    margin: 1em;
 }
 
 #menu_left {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    height: 100%;
-    width: 200px;
-
+    height: 100vh;
+    width: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-right: rgba(224, 223, 223, 0.661) solid 1px;
 }
-
 #menu_left>div {
     border-left: rgba(224, 223, 223, 0) solid 2px;
-    border-right: rgba(224, 223, 223, 0.661) solid .5px;
+
     cursor: pointer;
     padding: 20px 0px 20px;
     width: 100%;
@@ -198,7 +199,7 @@ watch(wz, (e) => {
 }
 
 #menu_content {
-    margin: 5px;
+    /* margin: 5px; */
     height: 100%;
     width: 100%;
     font-style: normal;
@@ -213,11 +214,11 @@ watch(wz, (e) => {
 
 hr {
     border-width: 0.5px;
+    margin: 0;
 }
 
 h2 {
     margin: 0;
-    margin-top: -20px;
     text-align: center;
 }
 

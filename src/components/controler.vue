@@ -22,7 +22,6 @@ const showPhoneControlers = () => {
         dynamicPage: true,
         mode: 'static',
         position: { right: '15%', bottom: '20%' },
-        color: '#74ecff'
     });
     rightControler.on("move", (evt, nipple) => {
         // console.log(nipple);
@@ -40,7 +39,6 @@ const showPhoneControlers = () => {
         dynamicPage: true,
         mode: 'static',
         position: { left: '15%', bottom: '20%' },
-        color: '#74ecff',
     });
     leftControler.on("move", (evt, nipple) => {
         var forc = 1

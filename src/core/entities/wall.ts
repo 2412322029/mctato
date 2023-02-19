@@ -1,6 +1,6 @@
 import { baseSquare } from "./base";
 import { ctx } from '../world'
-import { lineIntersect, P2Pdistance } from "../math";
+import { lineIntersect, P2Pdistance, XYtest } from "../math";
 
 class Wall extends baseSquare {
     v: boolean;
@@ -34,6 +34,33 @@ class Wall extends baseSquare {
     static drawall() {
         Wall.walllist.forEach((e) => {
             e.draw()
+        })
+    }
+    static checkWall<T extends baseSquare>(obj: T) {
+        XYtest(Wall.walllist, obj).forEach(e => {
+            //@ts-ignore
+            if (e.v) {
+                if (obj.x > e.x && obj.x - obj.w / 2 - e.w / 2 < e.x) {
+                    obj.x = e.x + e.w / 2 + obj.w / 2 + 1//右
+                    return
+                }
+                if (obj.x < e.x && obj.x + obj.w / 2 + e.w / 2 > e.x) {
+                    obj.x = e.x - e.w / 2 - obj.w / 2 - 1//左
+                    return
+                }
+            } else {
+                if (obj.y > e.y && obj.y - obj.h / 2 - e.h / 2 < e.y) {
+                    obj.y = e.y + e.h / 2 + obj.h / 2 + 1//下
+                    return
+                }
+                if (obj.y < e.y && obj.y + obj.h / 2 + e.h / 2 > e.y) {
+                    obj.y = e.y - e.h / 2 - obj.h / 2 - 1//上
+                    return
+                }
+            }
+
+
+
         })
     }
     /**

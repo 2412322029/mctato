@@ -1,6 +1,8 @@
 import { canvas } from "../world"
 import { config } from "../config"
 import { imgload } from "../utils/imgloader"
+import { Wall } from "./wall"
+import { noOut } from "../math"
 /**
  * 位置基类
  */
@@ -128,18 +130,7 @@ class baseSquare extends Position {
     move(vx: number, vy: number) {
         this.x += vx
         this.y += vy
-        if (this.x - this.w / 2 - 108 <= 0) {
-            this.x = this.w / 2 + 108
-        }
-        if (this.x + this.w / 2 + 108 >= 2000) {
-            this.x = 2000 - this.w / 2 - 108
-        }
-        if (this.y - this.h / 2 - 85 <= 0) {
-            this.y = this.h / 2 + 85
-        }
-        if (this.y + this.h / 2 + 75 >= 1125) {
-            this.y = 1125 - this.h / 2 - 70
-        }
+        noOut(this)
         this.draw()
     }
     /**
@@ -160,18 +151,7 @@ class baseSquare extends Position {
                 this.x = tox
                 this.y = toy
             }
-            if (this.x - this.w / 2 - 108 <= 0) {
-                this.x = this.w / 2 + 108
-            }
-            if (this.x + this.w / 2 + 108 >= 2000) {
-                this.x = 2000 - this.w / 2 - 108
-            }
-            if (this.y - this.h / 2 - 85 <= 0) {
-                this.y = this.h / 2 + 85
-            }
-            if (this.y + this.h / 2 + 75 >= 1125) {
-                this.y = 1125 - this.h / 2 - 70
-            }
+            noOut(this)
         }
     }
     isAlive() {

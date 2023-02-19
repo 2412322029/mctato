@@ -15,7 +15,7 @@ import { Effects } from "./effects";
 export var onPressKey = new Set()//处于按下状态的按键
 //对象创建
 
-const player1 = new player(ctx, 150, 150)
+const player1 = new player(ctx, 150, 550)
 
 Wall.init()
 Enemy.init()

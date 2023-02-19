@@ -117,33 +117,9 @@ class Zombie extends baseSquare {
             super.showName(names)
             this.showRealTimeHP()
             this.guardingCircle()
-            this.checkWall()
+            Wall.checkWall(this)
         }
         return this
-    }
-    checkWall() {
-        XYtest(Wall.walllist, this).forEach(e => {
-            if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
-                if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
-                    this.x = e.x + e.w / 2 + this.w / 2 + 1
-                    return
-                }
-                if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
-                    this.x = e.x - e.w / 2 - this.w / 2 - 1
-                    return
-                }
-            } else {
-
-                if (this.y > e.y && this.y - this.h / 2 - e.h / 2 < e.y) {
-                    this.y = e.y + e.h / 2 + this.h / 2 + 1
-                    return
-                }
-                if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
-                    this.y = e.y - e.h / 2 - this.h / 2 - 1
-                    return
-                }
-            }
-        })
     }
     showRealTimeHP() {
         var HPpercent
@@ -370,8 +346,8 @@ class Enemy {
     static list: Zombie[] = []
     static init() {
         for (let i = 0; i < 5; i++) {
-            let d: Zombie = new Zombie(ctx, 100 + Math.floor(Math.random() * (canvas.width - 300)),
-                100 + Math.floor(Math.random() * (canvas.height - 300)))
+            let d: Zombie = new Zombie(ctx, 100 + Math.floor(Math.random() * (canvas.width )),
+                100 + Math.floor(Math.random() * (canvas.height )))
             Enemy.list.push(d)
         }
 

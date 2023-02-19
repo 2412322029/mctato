@@ -145,4 +145,20 @@ function dijkstra(adjMatrix: any[][], start: any, end: any) {
     return [path, distance[end]];
 }
 
-export { Xtest, Ytest, XYtest, YXtest, P2Pdistance, adsorbent, dijkstra, lineIntersect };
+function noOut<T extends baseSquare>(obj: T) {
+    var ho = 30
+    if (obj.x - obj.w / 2 - ho <= 0) {
+        obj.x = obj.w / 2 + ho
+    }
+    if (obj.x + obj.w / 2 + ho >= 2000) {
+        obj.x = 2000 - obj.w / 2 - ho
+    }
+    if (obj.y - obj.h / 2 - ho <= 0) {
+        obj.y = obj.h / 2 + ho
+    }
+    if (obj.y + obj.h / 2 + ho >= 1125) {
+        obj.y = 1125 - obj.h / 2 - ho
+    }
+}
+
+export { XYtest, YXtest, P2Pdistance, adsorbent, dijkstra, lineIntersect, noOut };

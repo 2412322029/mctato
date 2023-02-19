@@ -2,7 +2,7 @@
  * 玩家
  */
 import { baseSquare } from "./base"
-import { XYtest, adsorbent } from "../math"
+import { XYtest, adsorbent, noOut } from "../math"
 import { config } from "../config"
 import { Enemy } from "./enemy"
 import { onPressKey, player1 } from "../world"
@@ -104,7 +104,7 @@ class player extends baseSquare {
             onrun.c = false
             if (confirm("死了,复活or重开")) {
                 this.HP = player.MaxHP
-                this.MP =player.MaxMP
+                this.MP = player.MaxMP
                 this.alive = true
                 onPressKey.clear()
                 onrun.c = true
@@ -234,32 +234,22 @@ class player extends baseSquare {
         this.vy = vy
         this.x += vx
         this.y += vy
-        if (this.x - this.w / 2 - 108 <= 0) {
-            this.x = this.w / 2 + 108
-        }
-        if (this.x + this.w / 2 + 108 >= 2000) {
-            this.x = 2000 - this.w / 2 - 108
-        }
-        if (this.y - this.h / 2 - 85 <= 0) {
-            this.y = this.h / 2 + 85
-        }
-        if (this.y + this.h / 2 + 75 >= 1125) {
-            this.y = 1125 - this.h / 2 - 70
-        }
-
+        noOut(this)
         this.draw()
     }
     //移动端
     shootAllDirections(weapon: any, vx: number, vy: number) {
         if (this.MP > 0) {
-            var s = new weapon(this.ctx, this.x, this.y, 20, 20)
-            s.initvx = this.vx * player.ShootspeedLose
-            s.initvy = this.vy * player.ShootspeedLose
-            s.speedx = vx
-            s.speedy = vy
-            audio.bui.play()
-            player.shootingList.push(s)
-            console.log(1);
+            // player.throttle(() => {
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20)
+                s.initvx = this.vx * player.ShootspeedLose
+                s.initvy = this.vy * player.ShootspeedLose
+                s.speedx = vx
+                s.speedy = vy
+                audio.bui.play()
+                player.shootingList.push(s)
+            // }, player.ShootInterval / weapon.modify)
+
         } else {//没蓝提醒
             player.throttle(() => {
                 audio.noshoot.play()
@@ -380,31 +370,7 @@ class player extends baseSquare {
                 i.give(player1)
                 audio.get.play()
             })
-            XYtest(Wall.walllist, this).forEach(e => {//检测墙体
-
-
-                if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
-                    if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
-                        this.x = e.x + e.w / 2 + this.w / 2 + 1
-                        return
-                    }
-                    if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
-                        this.x = e.x - e.w / 2 - this.w / 2 - 1
-                        return
-                    }
-                } else {
-
-                    if (this.y > e.y && this.y - this.h / 2 - e.h / 2 < e.y) {
-                        this.y = e.y + e.h / 2 + this.h / 2 + 1
-                        return
-                    }
-                    if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
-                        this.y = e.y - e.h / 2 - this.h / 2 - 1
-                        return
-                    }
-                }
-
-            })
+            Wall.checkWall(this)
         };
     }
     /**
