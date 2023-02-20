@@ -2,6 +2,17 @@ import { baseSquare } from "./base";
 import { ctx } from '../world'
 import { lineIntersect, P2Pdistance, XYtest } from "../math";
 
+interface awall {
+    x: number,
+    y: number,
+    L: number,
+    v?: boolean
+}
+export interface wallInfo {
+    list: Array<awall>
+    node: Record<string, [number, number]>,
+    adj: Record<string, number[]>
+}
 class Wall extends baseSquare {
     v: boolean;
     p: number[];
@@ -22,15 +33,24 @@ class Wall extends baseSquare {
         }
 
     }
-    static walllist: Array<baseSquare> = []
-    static init() {
-        Wall.walllist.push(// 170<x<1830 , 150<y<1000
-            new Wall(ctx, 600, 550, 550),
-            new Wall(ctx, 1400, 550, 300),
-            new Wall(ctx, 1000, 550, 800, false),
+    static creat(wallInfoList: wallInfo) {
+        Wall.nodeCoords = wallInfoList.node
+        Wall.adjList = wallInfoList.adj
+        Wall.adjMatrix = Wall.adjListToMatrix(Wall.adjList, Wall.nodeCoords)
+        wallInfoList.list.forEach(e => {
+            Wall.walllist.push(new Wall(ctx, e.x, e.y, e.L, e.v))
+        });
 
-        )
     }
+    static walllist: Array<baseSquare> = []
+    // static init() {
+    //     Wall.walllist.push(// 170<x<1830 , 150<y<1000
+    //         new Wall(ctx, 600, 550, 550),
+    //         new Wall(ctx, 1400, 550, 300),
+    //         new Wall(ctx, 1000, 550, 800, false),
+
+    //     )
+    // }
     static drawall() {
         Wall.walllist.forEach((e) => {
             e.draw()
@@ -71,25 +91,10 @@ class Wall extends baseSquare {
      *   5--4
     */
     //节点坐标
-    static nodeCoords: any = {
-        0: [300, 500],
-        1: [600, 150],
-        2: [1400, 325],
-        3: [1650, 500],
-        4: [1400, 775],
-        5: [600, 950],
-        6: [900, 500],
-    }
+    static nodeCoords: Record<string, [number, number]>
     //邻接表
-    static adjList: any = {
-        0: [1, 5],
-        1: [0, 2, 6],
-        2: [1, 3, 6],
-        3: [2, 4],
-        4: [3, 5],
-        5: [4, 0],
-        6: [1, 2],
-    }
+    static adjList: Record<string, number[]>
+
     //计算邻接矩阵
     static adjListToMatrix(adjList: any, nodeCoords: any) {
         let adjMatrix: any = [];
@@ -130,6 +135,6 @@ class Wall extends baseSquare {
     }
 
 }
-var adjMatrix = Wall.adjListToMatrix(Wall.adjList, Wall.nodeCoords)
-Wall.adjMatrix = adjMatrix
+
+
 export { Wall }

@@ -92,7 +92,8 @@
                         <button @click="$(gui.domElement).toggle()">打开调试面板</button>
                         <br>
                         <br>
-                        <button @click="Enemy.init()">怪物初始化</button>
+                        <button @click="Stage.restage(stageMaps.maplist[0])">换关1</button>
+                        <button @click="Stage.restage(stageMaps.maplist[1])">换关2</button>
                         <br>
                         <br>
 
@@ -121,7 +122,8 @@ import { player } from "../core/entities/myself";
 import { imgload } from "../core/utils/imgloader";
 import { Enemy } from "../core/entities/enemy";
 import { Howler } from "../core/utils/audio";
-
+import { Stage } from "../core/stage";
+import { stageMaps } from "../core/utils/stageloader";
 $(document).on("keydown", (e) => {
     if (e.key == "Escape") {
         start()
@@ -179,10 +181,11 @@ watch(wz, (e) => {
     flex-wrap: nowrap;
     height: 100vh;
     width: 150px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     border-right: rgba(224, 223, 223, 0.661) solid 1px;
 }
+
 #menu_left>div {
     border-left: rgba(224, 223, 223, 0) solid 2px;
 

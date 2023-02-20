@@ -18,6 +18,7 @@ class player extends baseSquare {
     isOnShooting: boolean
     vx!: number
     vy!: number
+    weapon: any
     /**
      * 
      * @param {*} ctx 
@@ -34,6 +35,7 @@ class player extends baseSquare {
         this.stamina = player.Maxstamina //现在的体力
         this.isOnShooting = false
         this.alive = true
+        this.weapon=skul
     }
     /**
      * 固有属性
@@ -84,6 +86,7 @@ class player extends baseSquare {
             this.checkHPMP()
             this.showRealTimeHP()
             this.showRealTimeMP()
+            this.shoot()
             return this
         }
         if (this.alive) {//如果没死
@@ -100,6 +103,8 @@ class player extends baseSquare {
             this.showRealTimeHP()
             this.showRealTimeMP()
             this.speedUp()
+            this.shoot()
+
         } else {
             onrun.c = false
             if (confirm("死了,复活or重开")) {
@@ -269,7 +274,7 @@ class player extends baseSquare {
     /**
      * 使用弹幕武器射击
      */
-    shoot(weapon: any) {//武器
+    shoot() {//武器
         const dosome = (s: any) => {
             s.initvx = this.vx * player.ShootspeedLose
             s.initvy = this.vy * player.ShootspeedLose
@@ -279,23 +284,23 @@ class player extends baseSquare {
         if (this.MP > 0) {
             player.throttle(() => {
                 if (onPressKey.has("arrowright")) {
-                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
-                    s.speedx = weapon.speed
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'right')
+                    s.speedx = this.weapon.speed
                     dosome(s)
                 } else if (onPressKey.has("arrowleft")) {
-                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
-                    s.speedx = -weapon.speed
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'left')
+                    s.speedx = -this.weapon.speed
                     dosome(s)
                 } else if (onPressKey.has("arrowup")) {
-                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
-                    s.speedy = -weapon.speed
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'up')
+                    s.speedy = -this.weapon.speed
                     dosome(s)
                 } else if (onPressKey.has("arrowdown")) {
-                    var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
-                    s.speedy = weapon.speed
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'down')
+                    s.speedy = this.weapon.speed
                     dosome(s)
                 }
-            }, player.ShootInterval / weapon.modify)
+            }, player.ShootInterval / this.weapon.modify)
 
             if (player.shootingList.length >= player.Maxshot) {
                 player.shootingList.shift()

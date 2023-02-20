@@ -341,13 +341,22 @@ class Zombie extends baseSquare {
         items.list.push(new items.supply(this.x - Math.random() * 20, this.y + 25))
     }
 }
+const EnemyMap = {
+    Zombie,
+}
 
 class Enemy {
     static list: Zombie[] = []
-    static init() {
-        for (let i = 0; i < 5; i++) {
-            let d: Zombie = new Zombie(ctx, 100 + Math.floor(Math.random() * (canvas.width )),
-                100 + Math.floor(Math.random() * (canvas.height )))
+    static craet(enemylist: Array<{ names: string, x: number, y: number }>) {
+        enemylist.forEach(e => {
+            //@ts-ignore
+            Enemy.list.push(new EnemyMap[e.names](ctx, e.x, e.y))
+        })
+    }
+    static random(n:number) {
+        for (let i = 0; i < n; i++) {
+            let d: Zombie = new Zombie(ctx, 100 + Math.floor(Math.random() * (canvas.width-100)),
+                100 + Math.floor(Math.random() * (canvas.height-100)))
             Enemy.list.push(d)
         }
 
@@ -363,7 +372,8 @@ class Enemy {
 
         });
         if (Enemy.list.length == 0) {
-            Enemy.init()
+            // Enemy.random(5)
+            // alert("关卡完成")
         }
     }
 }
