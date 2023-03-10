@@ -98,7 +98,7 @@
                         <br>
                         关卡数据定义
                         <br>
-                        <img src="../assets/2023-03-11 003040.jpg" style="width: 70%;" alt="">
+                        <img :src="imgload.t.src" style="width: 70%;" alt="">
                         <br>
                         <button @click="Stage.restage(stageMaps.maplist[0])">换关1</button>
                         <summary>
