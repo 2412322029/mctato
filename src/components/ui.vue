@@ -91,11 +91,28 @@
                         <br>
                         <button @click="$(gui.domElement).toggle()">打开调试面板</button>
                         <br>
+                        导入关卡 (填入json数据)
+                        <br>
+                        <textarea name="" id="" cols="60" rows="20" v-model="jss"></textarea>
+                        <button @click="redd(jss)">读取</button>
+                        <br>
+                        关卡数据定义
+                        <br>
+                        <img src="../assets/2023-03-11 003040.jpg" style="width: 70%;" alt="">
                         <br>
                         <button @click="Stage.restage(stageMaps.maplist[0])">换关1</button>
+                        <summary>
+                            <details>
+                                <pre v-html="syntaxHighlight(stageMaps.maplist[0])"></pre>
+                            </details>
+                        </summary>
+                        
                         <button @click="Stage.restage(stageMaps.maplist[1])">换关2</button>
-                        <br>
-                        <br>
+                        <summary>
+                            <details>
+                                <pre v-html="syntaxHighlight(stageMaps.maplist[1])"></pre>
+                            </details>
+                        </summary>
 
                     </div>
                 </div>
@@ -106,6 +123,7 @@
                         <a href="https://github.com/2412322029/mctato" target="_blank">
                             https://github.com/2412322029/mctato</a>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -124,6 +142,8 @@ import { Enemy } from "../core/entities/enemy";
 import { Howler } from "../core/utils/audio";
 import { Stage } from "../core/stage";
 import { stageMaps } from "../core/utils/stageloader";
+import { onPressKey } from "../core/world";
+import { syntaxHighlight } from '../core/utils/gui'
 $(document).on("keydown", (e) => {
     if (e.key == "Escape") {
         start()
@@ -157,6 +177,23 @@ watch(wz, (e) => {
     $("#rightControler>div").css({ right: e.R.right + "%" })
 
 }, { deep: true })
+
+$(document).on("keydown", (e) => {
+    if (e.key == "b") {
+        alert("打开背包")
+
+    }
+})
+
+var jss = ref(JSON.stringify(stageMaps.maplist[1],null,4))
+
+function redd(s: string) {
+    try {
+        Stage.restage(JSON.parse(s));
+    } catch {
+        alert("失败,请检查json格式")
+    }
+}
 
 </script>
 <style scoped>
@@ -239,5 +276,10 @@ select {
     color: #fffefe;
     border-radius: 5px;
 
+}
+
+#start {
+    user-select: none;
+    cursor: pointer;
 }
 </style>

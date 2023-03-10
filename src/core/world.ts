@@ -10,7 +10,7 @@ import { frame, showDebug } from "./game";
 import { Stage } from "./stage";
 export var onPressKey = new Set()//处于按下状态的按键
 
-var player1=Stage.init()//场景初始化
+var player1 = Stage.init()//场景初始化
 
 var playerspeedcontrol = {
     vx: 0,
@@ -37,7 +37,7 @@ function render() {
 
     Stage.run()//场景开始
 
-    if (catapultspeedcontrol.on == true && frame.c%8 == 0) {
+    if (catapultspeedcontrol.on == true && frame.c % 8 == 0) {
         catapultspeedcontrol.speed = player1.weapon.speed
         player1.shootAllDirections(player1.weapon, catapultspeedcontrol.vx, catapultspeedcontrol.vy)
     }

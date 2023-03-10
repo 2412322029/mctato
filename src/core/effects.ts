@@ -23,7 +23,7 @@ class blast extends baseSquare {
         this.darw()
         setTimeout(() => {
             list.splice(list.indexOf(this), 1)
-            clearInterval(this.timer)
+            // clearInterval(this.timer)
         }, t);
     }
     darw() {

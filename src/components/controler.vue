@@ -57,16 +57,7 @@ const showPhoneControlers = () => {
     })
 }
 const showPCcontrolers = () => {
-    $(document).on("keydown", function (e: { key: string; }) {
-        if (!onPressKey.has(e.key.toLowerCase())) {
-            onPressKey.add(e.key.toLowerCase())
-        }
-    })
-    $(document).on("keyup", function (e: { key: string; }) {
-        onPressKey.delete('alt')
-        onPressKey.delete(e.key.toLowerCase())
-    })
-    $(document).on("keydown", () => {
+    function m() {
         //人物移动
         var vx = 0
         var vy = 0
@@ -107,7 +98,19 @@ const showPCcontrolers = () => {
             player.imgp = player.imgcenter
         }
         playerspeedcontrol.set(vx, vy)
+    }
+    $(document).on("keydown", function (e: { key: string; }) {
+        if (!onPressKey.has(e.key.toLowerCase())) {
+            onPressKey.add(e.key.toLowerCase())
+        }
+        m()
     })
+    $(document).on("keyup", function (e: { key: string; }) {
+        onPressKey.delete('alt')
+        onPressKey.delete(e.key.toLowerCase())
+        m()
+    })
+
 }
 onMounted(() => {
     showPhoneControlers()
@@ -122,5 +125,9 @@ onMounted(() => {
     position: fixed;
     width: 100%;
     height: 100%;
+}
+#start{
+    user-select: none;
+    cursor: pointer;
 }
 </style>
