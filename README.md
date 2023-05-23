@@ -1,5 +1,5 @@
 
-github 2412322029.github.io/mctato/
+github https://2412322029.github.io/mctato/
 
 国内 https://blog.unrun.top/mctato
 
