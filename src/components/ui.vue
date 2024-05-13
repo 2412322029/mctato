@@ -100,19 +100,19 @@
                         <br>
                         <img :src="imgload.t.src" style="width: 70%;" alt="">
                         <br>
-                        <button @click="Stage.restage(stageMaps.maplist[0])">换关1</button>
+                        <!-- <button @click="Stage.restage(stageMaps.maplist[0])">换关1</button>
                         <summary>
                             <details>
-                                <pre v-html="syntaxHighlight(stageMaps.maplist[0])"></pre>
+                                <pre v-html=" stageMaps.maplist[0]"></pre>
                             </details>
                         </summary>
                         
                         <button @click="Stage.restage(stageMaps.maplist[1])">换关2</button>
                         <summary>
                             <details>
-                                <pre v-html="syntaxHighlight(stageMaps.maplist[1])"></pre>
+                                <pre v-html="stageMaps.maplist[1]"></pre>
                             </details>
-                        </summary>
+                        </summary> -->
 
                     </div>
                 </div>
@@ -131,19 +131,16 @@
 </template>
 
 <script setup lang="ts">
-import $ from "jquery"
+import $ from "jquery";
 import { reactive, ref, watch } from "vue";
-import { config, setting } from "../core/config";
-import { toggleRun } from "../core/game";
-import { gui } from "../core/utils/gui";
+import { setting } from "../core/config";
 import { player } from "../core/entities/myself";
-import { imgload } from "../core/utils/imgloader";
-import { Enemy } from "../core/entities/enemy";
-import { Howler } from "../core/utils/audio";
+import { toggleRun } from "../core/game";
 import { Stage } from "../core/stage";
+import { Howler } from "../core/utils/audio";
+import { gui } from "../core/utils/gui";
+import { imgload } from "../core/utils/imgloader";
 import { stageMaps } from "../core/utils/stageloader";
-import { onPressKey } from "../core/world";
-import { syntaxHighlight } from '../core/utils/gui'
 $(document).on("keydown", (e) => {
     if (e.key == "Escape") {
         start()
@@ -282,4 +279,5 @@ select {
     user-select: none;
     cursor: pointer;
 }
+
 </style>

@@ -4,7 +4,6 @@
 var canvas = document.getElementById('canvas') as HTMLCanvasElement;//获取画布元素
 var ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 import { player } from "./entities/myself"
-import { skul } from "./entities/catapult"
 import { config, even } from "./config"
 import { frame, showDebug } from "./game";
 import { Stage } from "./stage";

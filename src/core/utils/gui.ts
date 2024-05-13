@@ -1,7 +1,7 @@
-import { config, even } from "../config"
-import { canvas } from '../world'
 import * as dat from "dat.gui";
-import $ from 'jquery'
+import $ from 'jquery';
+import { config, even } from "../config";
+import { canvas } from '../world';
 
 const reloadconfig = () => {
     var c = <HTMLCanvasElement>canvas;
@@ -59,26 +59,7 @@ var ccc = {
 }
 gui.add(ccc, "full",).name("全屏")
 
-function syntaxHighlight(json:any) {
-    if (typeof json != 'string') {
-        json = JSON.stringify(json, undefined, 4);
-    }
-    json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match:any) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
 
-export { gui, reloadconfig,syntaxHighlight }
+
+export { gui, reloadconfig };
+
