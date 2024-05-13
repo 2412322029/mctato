@@ -1,6 +1,8 @@
-import { canvas, ctx } from "../world"
+import { canvas } from "../world"
 import { config } from "../config"
-import { imgload } from "../imgloader"
+import { imgload } from "../utils/imgloader"
+import { Wall } from "./wall"
+import { noOut } from "../math"
 /**
  * 位置基类
  */
@@ -74,8 +76,8 @@ class baseSquare extends Position {
     draw() {
         if (!this.isOutOfRange()) {
             this.ctx.fillStyle = this.color as string;
-            this.ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2,
-                this.w, this.h);
+            this.ctx.fillRect(Math.floor(this.x - this.w / 2), Math.floor(this.y - this.h / 2),
+                Math.floor(this.w), Math.floor(this.h));
         }
         return this
     }
@@ -88,7 +90,7 @@ class baseSquare extends Position {
         //第几排，第几列
         if (!this.isOutOfRange()) {
             this.ctx.drawImage(this.img, position[0] * 100, position[1] * 100, 100, 100,
-                this.x - this.w / 2, this.y - this.h / 2, sizex, sizey
+                Math.floor(this.x - this.w / 2), Math.floor(this.y - this.h / 2), sizex, sizey
             )
         }
         return this
@@ -100,7 +102,7 @@ class baseSquare extends Position {
      * @returns {boolean} 
      */
     isInMe(tx: number, ty: number): boolean {
-        ctx.beginPath();
+        this.ctx.beginPath();
         this.ctx.rect(this.x - this.w / 2, this.y - this.h / 2,
             this.w, this.h);
         return (this.ctx.isPointInPath(tx, ty))
@@ -112,11 +114,12 @@ class baseSquare extends Position {
      */
     showBox(w: number, h: number) {
         if (config.showHitBox) {
+            this.ctx.strokeStyle = "blcak"
             this.ctx.beginPath();
             this.ctx.rect((this.x - this.w / 2) - w / 2, (this.y - this.h / 2) - h / 2,
                 this.w + w, this.h + h);
-            this.ctx.stroke()
             this.ctx.closePath()
+            this.ctx.stroke()
         }
     }
     /**
@@ -127,18 +130,7 @@ class baseSquare extends Position {
     move(vx: number, vy: number) {
         this.x += vx
         this.y += vy
-        if (this.x - this.w / 2 - 108 <= 0) {
-            this.x = this.w / 2 + 108
-        }
-        if (this.x + this.w / 2 + 108 >= 2000) {
-            this.x = 2000 - this.w / 2 - 108
-        }
-        if (this.y - this.h / 2 - 85 <= 0) {
-            this.y = this.h / 2 + 85
-        }
-        if (this.y + this.h / 2 + 75 >= 1125) {
-            this.y = 1125 - this.h / 2 - 70
-        }
+        noOut(this)
         this.draw()
     }
     /**
@@ -159,18 +151,7 @@ class baseSquare extends Position {
                 this.x = tox
                 this.y = toy
             }
-            if (this.x - this.w / 2 - 108 <= 0) {
-                this.x = this.w / 2 + 108
-            }
-            if (this.x + this.w / 2 + 108 >= 2000) {
-                this.x = 2000 - this.w / 2 - 108
-            }
-            if (this.y - this.h / 2 - 85 <= 0) {
-                this.y = this.h / 2 + 85
-            }
-            if (this.y + this.h / 2 + 75 >= 1125) {
-                this.y = 1125 - this.h / 2 - 70
-            }
+            noOut(this)
         }
     }
     isAlive() {

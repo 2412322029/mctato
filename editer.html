@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>editer</title>
+</head>
+
+<body>
+  <canvas id="canvas" width="1000px" height="562px" style="top:0"></canvas>
+  <div id="app"></div>
+</body>
+<script type="module" src="./src/editer_main.ts"></script>
+<style>
+  body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  #canvas {
+    position: fixed;
+    top: 0;
+    display: block;
+    border: rgb(0, 0, 0) solid 1px;
+    background-color: rgba(255, 255, 255, 0);
+    transform-origin: 0 0;
+  }
+</style>
+
+</html>

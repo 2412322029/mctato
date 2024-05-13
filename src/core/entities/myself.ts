@@ -2,13 +2,15 @@
  * 玩家
  */
 import { baseSquare } from "./base"
-import { XYtest } from "../math"
+import { XYtest, adsorbent, noOut } from "../math"
 import { config } from "../config"
 import { Enemy } from "./enemy"
-import { onPressKey } from "../world"
+import { onPressKey, player1 } from "../world"
 import { skul } from "./catapult"
 import { frame, onrun } from "../game"
 import { Wall } from "./wall"
+import { audio } from "../utils/audio"
+import { items } from "./Items"
 class player extends baseSquare {
     HP: number
     MP: number
@@ -16,6 +18,7 @@ class player extends baseSquare {
     isOnShooting: boolean
     vx!: number
     vy!: number
+    weapon: any
     /**
      * 
      * @param {*} ctx 
@@ -32,6 +35,7 @@ class player extends baseSquare {
         this.stamina = player.Maxstamina //现在的体力
         this.isOnShooting = false
         this.alive = true
+        this.weapon=skul
     }
     /**
      * 固有属性
@@ -64,6 +68,9 @@ class player extends baseSquare {
     static ShootspeedLose = 0.6 //弹幕初速度损失（带有n%的玩家速度）
     static invincibleTime = 1000 //无敌
     static isInvincible = false //处于无敌状态
+
+    static adsorbentPosition = 300 //吸附距离
+    static adsorbentSpeed = 15 //吸附速度
     /**
     * 同时绘制名字
     * @returns self
@@ -76,9 +83,10 @@ class player extends baseSquare {
             super.drawImg(player.imgflash)
             this.showName(player.names)
             this.beenHit()
-            this.checkHP()
+            this.checkHPMP()
             this.showRealTimeHP()
             this.showRealTimeMP()
+            this.shoot()
             return this
         }
         if (this.alive) {//如果没死
@@ -91,14 +99,17 @@ class player extends baseSquare {
 
             super.showName(player.names)
             this.beenHit()
-            this.checkHP()
+            this.checkHPMP()
             this.showRealTimeHP()
             this.showRealTimeMP()
             this.speedUp()
+            this.shoot()
+
         } else {
             onrun.c = false
             if (confirm("死了,复活or重开")) {
                 this.HP = player.MaxHP
+                this.MP = player.MaxMP
                 this.alive = true
                 onPressKey.clear()
                 onrun.c = true
@@ -109,8 +120,28 @@ class player extends baseSquare {
         }
 
         return this
-
-
+    }
+    static showimgdirection(direction: Direction) {
+        switch (direction) {
+            case Direction.R:
+                player.imgp = player.imgright
+                break;
+            case Direction.L:
+                player.imgp = player.imgleft
+                break;
+            case Direction.U:
+                player.imgp = player.imgup
+                break;
+            case Direction.D:
+                player.imgp = player.imgdown
+                break;
+            case Direction.C:
+                player.imgp = player.imgcenter
+                break;
+            default:
+                player.imgp = player.imgcenter
+                break;
+        }
     }
     /**
      * 显示实时血量
@@ -208,53 +239,27 @@ class player extends baseSquare {
         this.vy = vy
         this.x += vx
         this.y += vy
-        if (this.x - this.w / 2 - 108 <= 0) {
-            this.x = this.w / 2 + 108
-        }
-        if (this.x + this.w / 2 + 108 >= 2000) {
-            this.x = 2000 - this.w / 2 - 108
-        }
-        if (this.y - this.h / 2 - 85 <= 0) {
-            this.y = this.h / 2 + 85
-        }
-        if (this.y + this.h / 2 + 75 >= 1125) {
-            this.y = 1125 - this.h / 2 - 70
-        }
-
+        noOut(this)
         this.draw()
     }
-    /**
-     * 使用弹幕武器射击
-     */
-    shoot(weapon: any) {//武器
-        player.throttle(() => {
-            if (onPressKey.has("arrowright")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'right')
+    //移动端
+    shootAllDirections(weapon: any, vx: number, vy: number) {
+        if (this.MP > 0) {
+            // player.throttle(() => {
+                var s = new weapon(this.ctx, this.x, this.y, 20, 20)
                 s.initvx = this.vx * player.ShootspeedLose
                 s.initvy = this.vy * player.ShootspeedLose
-                s.speedx = weapon.speed
+                s.speedx = vx
+                s.speedy = vy
+                audio.bui.play()
                 player.shootingList.push(s)
-            } else if (onPressKey.has("arrowleft")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'left')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedx = -weapon.speed
-                player.shootingList.push(s)
-            } else if (onPressKey.has("arrowup")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'up')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedy = -weapon.speed
-                player.shootingList.push(s)
-            } else if (onPressKey.has("arrowdown")) {
-                var s = new weapon(this.ctx, this.x, this.y, 20, 20, 'down')
-                s.initvx = this.vx * player.ShootspeedLose
-                s.initvy = this.vy * player.ShootspeedLose
-                s.speedy = weapon.speed
-                player.shootingList.push(s)
-            }
-        }, player.ShootInterval / weapon.modify)
+            // }, player.ShootInterval / weapon.modify)
 
+        } else {//没蓝提醒
+            player.throttle(() => {
+                audio.noshoot.play()
+            }, 1000)
+        }
         if (player.shootingList.length >= player.Maxshot) {
             player.shootingList.shift()
         }
@@ -265,7 +270,59 @@ class player extends baseSquare {
                 sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
             }
         });
+    }
+    /**
+     * 使用弹幕武器射击
+     */
+    shoot() {//武器
+        const dosome = (s: any) => {
+            s.initvx = this.vx * player.ShootspeedLose
+            s.initvy = this.vy * player.ShootspeedLose
+            player.shootingList.push(s)
+            audio.bui.play()
+        }
+        if (this.MP > 0) {
+            player.throttle(() => {
+                if (onPressKey.has("arrowright")) {
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'right')
+                    s.speedx = this.weapon.speed
+                    dosome(s)
+                } else if (onPressKey.has("arrowleft")) {
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'left')
+                    s.speedx = -this.weapon.speed
+                    dosome(s)
+                } else if (onPressKey.has("arrowup")) {
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'up')
+                    s.speedy = -this.weapon.speed
+                    dosome(s)
+                } else if (onPressKey.has("arrowdown")) {
+                    var s = new this.weapon(this.ctx, this.x, this.y, 20, 20, 'down')
+                    s.speedy = this.weapon.speed
+                    dosome(s)
+                }
+            }, player.ShootInterval / this.weapon.modify)
 
+            if (player.shootingList.length >= player.Maxshot) {
+                player.shootingList.shift()
+            }
+            player.shootingList.forEach(sk => {
+                if (sk.goneRenge > skul.range) {
+                    sk.alive = false
+                } else {
+                    sk.move(sk.speedx + sk.initvx, sk.speedy + sk.initvy)
+                }
+            });
+        } else {//按了上|下|左|右
+            if (onPressKey.has("arrowright") ||
+                onPressKey.has("arrowleft") ||
+                onPressKey.has("arrowup") ||
+                onPressKey.has("arrowdown")) {
+                player.throttle(() => {
+                    audio.noshoot.play()
+                }, 1000)
+
+            }
+        }
     }
     // 函数节流（固定时间内无论触发几次，仅执行一次）
     static throttle(func: Function, interval: number) {
@@ -281,12 +338,17 @@ class player extends baseSquare {
     /**
      * 检查血量并且纠正,判断死活
      */
-    checkHP() {
+    checkHPMP() {
         if (this.HP <= 0) {
             this.alive = false
             this.HP = 0
         } else if (this.HP >= player.MaxHP) {
             this.HP = player.MaxHP
+        }
+        if (this.MP < 0) {
+            this.MP = 0
+        } else if (this.MP > player.MaxMP) {
+            this.MP = player.MaxMP
         }
     }
     /**
@@ -307,32 +369,13 @@ class player extends baseSquare {
                     }
                 })
             }
-
-            XYtest(Wall.walllist, this).forEach(e => {
-                if ((Math.abs(e.x - this.x) / (e.y - this.y)) >= e.w / e.h) {
-                    if (this.x > e.x && this.x - this.w / 2 - e.w / 2 < e.x) {
-                        this.x  = e.x + e.w / 2 + this.w / 2 + 1
-                        return
-                    }
-                    if (this.x < e.x && this.x + this.w / 2 + e.w / 2 > e.x) {
-                        this.x = e.x - e.w / 2 - this.w / 2 - 1
-                        return
-                    }
-                } else {
-
-                    if (this.y > e.y && this.y - this.h / 2 - e.h / 2 < e.y) {
-                        this.y = e.y + e.h / 2 + this.h / 2 + 1
-                        return
-                    }
-                    if (this.y < e.y && this.y + this.h / 2 + e.h / 2 > e.y) {
-                        this.y  = e.y - e.h / 2 - this.h / 2 - 1
-                        return
-                    }
-                }
-
-
-
+            //检测可拾取物品
+            adsorbent(items.list, this, 50).forEach((i: any, index) => {
+                items.list.splice(index, 1)
+                i.give(player1)
+                audio.get.play()
             })
+            Wall.checkWall(this)
         };
     }
     /**
@@ -362,4 +405,12 @@ class player extends baseSquare {
         }
     }
 }
+enum Direction {
+    R = "right",
+    L = "left",
+    U = "up",
+    D = "down",
+    C = "center"
+}
 export { player }
+export { Direction }
