@@ -7,6 +7,7 @@ const config = {
     showGuardingCircle: false,//显示警戒圈
     showNameAbove: false, //显示名字
     showLink: false, //显示路径连线
+    showpath: true, //显示路径图    
     showwanderRange: false, //显示游荡区域
     Stick_offset_affects_speed: true, //摇杆偏移量影响速度
 
@@ -17,7 +18,7 @@ const even = {
 }
 
 const setting = {
-    debug: false, //dat.gui控件
+    debug: true, //dat.gui控件
     volumes: 0.2, //音量
     showHPMPtext: true,//显示血条文字
     Stick_offset_affects_speed: true, //摇杆偏移量影响速度

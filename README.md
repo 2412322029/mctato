@@ -3,7 +3,7 @@ github https://2412322029.github.io/mctato/
 
 bilibili video https://www.bilibili.com/video/BV1gu4y1F7sY/
 
-![image-20230213181816417](README.assets/image-20230213181816417.png)
+![alt text](image.png)
 
 
 wasd移动

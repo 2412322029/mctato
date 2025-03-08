@@ -86,38 +86,43 @@
                         底 0<input type="range" min="0" max="100" v-model="wz.R.bottom">{{ wz.R.bottom }}%
                         <button @click="wz.R.right = 15; wz.R.bottom = 20">重置</button>
                         <br>
-                        音量:0<input type="range" min="0" max="1" step="0.01" v-model="settings.volumes">{{ settings.volumes
+                        音量:0<input type="range" min="0" max="1" step="0.01" v-model="settings.volumes">{{
+                            settings.volumes
                         }}
                         <br>
                         <button @click="$(gui.domElement).toggle()">打开调试面板</button>
-                        <br>
-                        导入关卡 (填入json数据)
-                        <br>
-                        <textarea name="" id="" cols="60" rows="20" v-model="jss"></textarea>
-                        <button @click="redd(jss)">读取</button>
-                        <br>
-                        关卡数据定义
-                        <br>
-                        <img :src="imgload.t.src" style="width: 70%;" alt="">
-                        <br>
-                        <!-- <button @click="Stage.restage(stageMaps.maplist[0])">换关1</button>
-                        <summary>
-                            <details>
-                                <pre v-html=" stageMaps.maplist[0]"></pre>
-                            </details>
-                        </summary>
-                        
-                        <button @click="Stage.restage(stageMaps.maplist[1])">换关2</button>
-                        <summary>
-                            <details>
-                                <pre v-html="stageMaps.maplist[1]"></pre>
-                            </details>
-                        </summary> -->
 
                     </div>
                 </div>
                 <div v-show="id == 4" :name="tabname[4]">
                     <h2>{{ tabname[4] }}</h2>
+                    <hr>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; height: 30px; margin: 10px;">
+                        <template v-for="index in stageMaps.maplist.length" :key="index">
+                            <div>
+                                <button style="margin: 1px;" @click="Stage.restage(stageMaps.maplist[index-1])">关卡 {{ index}}</button>
+                                <button @click="openModal(stageMaps.maplist[index-1])">详情</button>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- 弹窗组件 -->
+                    <JsonModal v-model="isModalOpen" :jsonData="currentMap" />
+
+                    导入关卡 (填入json数据)
+                    <br>
+                    <textarea name="" id="" cols="40" rows="10" v-model="jss"></textarea>
+                    <button @click="redd(jss)">读取</button>
+                    <br>
+                    关卡数据定义
+                    <br>
+                    <img :src="imgload.t.src" style="width: 40%;" alt="">
+                    <br>
+
+
+                </div>
+                <div v-show="id == 5" :name="tabname[5]">
+                    <h2>{{ tabname[5] }}</h2>
                     <hr>
                     <div>
                         <a href="https://github.com/2412322029/mctato" target="_blank">
@@ -141,6 +146,14 @@ import { Howler } from "../core/utils/audio";
 import { gui } from "../core/utils/gui";
 import { imgload } from "../core/utils/imgloader";
 import { stageMaps } from "../core/utils/stageloader";
+import JsonModal from './JsonModal.vue';
+const isModalOpen = ref(false); // 控制弹窗显示
+const currentMap = ref<stageMap | null>(null); // 当前显示的关卡数据
+
+const openModal = (map: stageMap) => {
+    currentMap.value = map; // 设置当前关卡数据
+    isModalOpen.value = true; // 打开弹窗
+};
 $(document).on("keydown", (e) => {
     if (e.key == "Escape") {
         start()
@@ -150,7 +163,7 @@ function start() {
     $("#cover").fadeToggle({ duration: 300, })
     toggleRun()
 }
-var tabname = ["home", "背包", "人物", "设置", "关于"]
+var tabname = ["home", "背包", "人物", "设置", "关卡", "关于"]
 var id = ref(0)
 var settings = reactive(setting)
 watch(settings, (e) => {
@@ -182,7 +195,7 @@ $(document).on("keydown", (e) => {
     }
 })
 
-var jss = ref(JSON.stringify(stageMaps.maplist[1],null,4))
+var jss = ref(JSON.stringify(stageMaps.maplist[1], null, 4))
 
 function redd(s: string) {
     try {
@@ -279,5 +292,4 @@ select {
     user-select: none;
     cursor: pointer;
 }
-
 </style>

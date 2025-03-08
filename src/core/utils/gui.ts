@@ -36,7 +36,7 @@ window.onload = () => {
 }
 
 const gui = new dat.GUI({ closed: true });
-gui.hide()
+// gui.hide()
 gui.add(config, "zoomRatio", 0.3, 1.5).name("缩放比").onChange(() => { reloadconfig() })
 gui.add(config, "showdebug").name("调试信息")
 gui.add(config, "displayPosition").name("显示坐标")
@@ -45,6 +45,7 @@ gui.add(config, "showHPMPtext").name("显示血条文字")
 gui.add(config, "showHitBox").name("显示碰撞箱")
 gui.add(config, "showGuardingCircle").name("显示警戒圈")
 gui.add(config, "showLink").name("显示路径连线")
+gui.add(config, "showpath").name("显示节点图(刷新生效)")
 gui.add(config, "showwanderRange").name("显示游荡区域")
 gui.add(config, "Stick_offset_affects_speed").name("摇杆偏移量影响速度")
 gui.add(even, "showcontroler").name("显示遥杆").onChange(() => { reloadconfig() })
