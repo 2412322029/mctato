@@ -12,13 +12,14 @@
     </div>
   </template>
   
-  <script>
+  <script lang="ts">
   import { ref, watch } from 'vue';
-  
+  import {stageMap} from '../core/utils/stageloader';
+  import { PropType } from 'vue';
   export default {
     props: {
       modelValue: Boolean, // v-model 绑定的值
-      jsonData: Object
+      jsonData: Object as PropType<stageMap | null>, // 关卡数据
     },
     emits: ['update:modelValue'], // 定义可触发的事件
     setup(props, { emit }) {

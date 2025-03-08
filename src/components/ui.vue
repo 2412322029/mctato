@@ -145,7 +145,7 @@ import { Stage } from "../core/stage";
 import { Howler } from "../core/utils/audio";
 import { gui } from "../core/utils/gui";
 import { imgload } from "../core/utils/imgloader";
-import { stageMaps } from "../core/utils/stageloader";
+import { stageMaps,stageMap } from "../core/utils/stageloader";
 import JsonModal from './JsonModal.vue';
 const isModalOpen = ref(false); // 控制弹窗显示
 const currentMap = ref<stageMap | null>(null); // 当前显示的关卡数据
